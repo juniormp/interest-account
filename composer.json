@@ -1,0 +1,14 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Chip\\InterestAccount\\": "src/",
+      "Chip\\InterestAccount\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9"
+  },
+  "require": {
+    "friendsofphp/php-cs-fixer": "^2.16"
+  }
+}
