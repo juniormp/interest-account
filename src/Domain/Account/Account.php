@@ -33,4 +33,19 @@ class Account
         $this->interestRate = $interestRate;
         return $this;
     }
+
+    public function getInterestRate(): float
+    {
+        $interestRate = $this->interestRate;
+
+        return $interestRate->getRate();
+    }
+
+    public function applyInterestRate(float $rate): Account
+    {
+        $interestRate = new InterestRate();
+        $interestRate->setRate($rate);
+
+        return $this->setInterestRate($interestRate);
+    }
 }

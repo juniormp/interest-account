@@ -38,4 +38,9 @@ class User
     {
         return $this->income;
     }
+
+    public function getAccount(): Account
+    {
+        return $this->account;
+    }
 }
