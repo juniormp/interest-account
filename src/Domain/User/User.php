@@ -22,6 +22,11 @@ class User
         return $this;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function setIncome(Money $income): User
     {
         $this->income = $income;
