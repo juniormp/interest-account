@@ -9,6 +9,7 @@
     "phpunit/phpunit": "^9"
   },
   "require": {
-    "friendsofphp/php-cs-fixer": "^2.16"
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "php-di/php-di": "^6.2"
   }
 }
