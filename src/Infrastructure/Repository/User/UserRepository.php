@@ -7,4 +7,6 @@ use Chip\InterestAccount\Domain\User\User;
 interface UserRepository
 {
     public function save(User $user): User;
+
+    public function findById(string $id): User;
 }

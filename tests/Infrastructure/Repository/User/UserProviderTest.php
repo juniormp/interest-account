@@ -62,4 +62,16 @@ class UserProviderTest extends TestCase
         $this->assertSame($income, $result->getIncome());
         $this->assertSame($id, $user->getId());
     }
+
+    public function test_should_find_user_by_id()
+    {
+        $user = new User();
+        $id = UUID::v4();
+        $user->setId($id);
+        $this->subject->save($user);
+
+        $result = $this->subject->findById($id);
+
+        $this->assertSame($id, $result->getId());
+    }
 }

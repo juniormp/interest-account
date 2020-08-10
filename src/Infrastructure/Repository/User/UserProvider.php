@@ -50,4 +50,9 @@ class UserProvider extends SPLObjectStorage implements UserRepository
 
         return $user;
     }
+
+    public function findById(string $id): User
+    {
+        return self::offsetGet((new User())->setId($id));
+    }
 }
