@@ -3,6 +3,8 @@
 namespace Chip\InterestAccount\Infrastructure\Repository\User;
 
 use Chip\InterestAccount\Domain\User\User;
+use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserAlreadyHasAccount;
+use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserNotFoundException;
 use Exception;
 use SplObjectStorage;
 
@@ -46,13 +48,21 @@ class UserProvider extends SPLObjectStorage implements UserRepository
 
     public function save(User $user): User
     {
-        self::attach($user, $user);
-
-        return $user;
+        try {
+            $this->findById($user->getId());
+            throw new UserAlreadyHasAccount(UserAlreadyHasAccount::MESSAGE);
+        } catch (UserNotFoundException $e) {
+            self::attach($user, $user);
+            return $user;
+        }
     }
 
     public function findById(string $id): User
     {
-        return self::offsetGet((new User())->setId($id));
+        if (self::contains((new User())->setId($id))) {
+            return self::offsetGet((new User())->setId($id));
+        } else {
+            throw new UserNotFoundException(UserNotFoundException::MESSAGE);
+        }
     }
 }

@@ -4,6 +4,8 @@ use Chip\InterestAccount\Domain\Account\Account;
 use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\User\User;
 use Chip\InterestAccount\Domain\User\UUID;
+use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserAlreadyHasAccount;
+use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserNotFoundException;
 use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -73,5 +75,33 @@ class UserProviderTest extends TestCase
         $result = $this->subject->findById($id);
 
         $this->assertSame($id, $result->getId());
+    }
+
+    public function test_should_throw_exception_when_saving_if_user_has_already_an_account()
+    {
+        $user = new User();
+        $account = new Account();
+        $income = new Money();
+        $id = UUID::v4();
+        $user->setId($id)->setAccount($account)->setIncome($income);
+        UserProvider::getInstance()->save($user);
+
+        $user = new User();
+        $user->setId($id)->setAccount($account)->setIncome($income);
+
+        $this->expectException(UserAlreadyHasAccount::class);
+        $this->expectExceptionMessage(UserAlreadyHasAccount::MESSAGE);
+
+        $this->subject->save($user);
+    }
+
+    public function test_should_throw_exception_when_finding_if_user_do_not_exist()
+    {
+        $id = UUID::v4();
+
+        $this->expectException(UserNotFoundException::class);
+        $this->expectExceptionMessage(UserNotFoundException::MESSAGE);
+
+        $this->subject->findById($id);
     }
 }
