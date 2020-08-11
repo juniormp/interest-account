@@ -1,5 +1,6 @@
 <?php
 
+use Chip\InterestAccount\Application\DepositFunds;
 use Chip\InterestAccount\Application\OpenAccount;
 use Chip\InterestAccount\Domain\InterestRate\ApplyInterestRateService;
 use Chip\InterestAccount\Domain\InterestRate\InterestRatePolicyBuilder;
@@ -7,7 +8,6 @@ use Chip\InterestAccount\Domain\User\UserFactory;
 use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\GetUserIncomeService;
 use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\StatsAPIClient;
 use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
-use GuzzleHttp\Client;
 use GuzzleHttp\Client as HttpClient;
 
 return [
@@ -25,4 +25,10 @@ return [
             ])))
         );
     },
+
+    DepositFunds::class => function () {
+        return new DepositFunds(
+            UserProvider::getInstance()
+        );
+    }
 ];
