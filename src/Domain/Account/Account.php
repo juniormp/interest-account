@@ -48,4 +48,9 @@ class Account
 
         return $this->setInterestRate($interestRate);
     }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
 }
