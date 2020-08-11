@@ -15,8 +15,15 @@ class Transaction
         $this->amount = $amount;
     }
 
-    public function getAmount(): Money
+    public function getCurrency(): Money
     {
         return $this->amount;
+    }
+
+    public function getAmount(): float
+    {
+        $currency = $this->amount;
+
+        return $currency->getValue();
     }
 }

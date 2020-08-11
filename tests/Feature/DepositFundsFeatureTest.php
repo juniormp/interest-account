@@ -39,12 +39,12 @@ class DepositFundsFeatureTest extends TestCase
         $amount = 500.00;
         $money = $moneyFactory->create($amount, CurrencyType::GBP);
         $transaction = $service->execute(new DepositFundsCommand($id, $amount));
-        $this->assertEquals($money, $transaction->getAmount());
+        $this->assertEquals($money, $transaction->getCurrency());
 
         $amount2 = 250.00;
         $money2 = $moneyFactory->create($amount2, CurrencyType::GBP);
         $transaction2 = $service->execute(new DepositFundsCommand($id, $amount2));
-        $this->assertEquals($money2, $transaction2->getAmount());
+        $this->assertEquals($money2, $transaction2->getCurrency());
 
         $user = UserProvider::getInstance()->findById($id);
         $transactions = $user->getTransactions();

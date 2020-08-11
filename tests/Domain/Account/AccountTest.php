@@ -20,7 +20,7 @@ class AccountTest extends TestCase
         $transactions = $subject->getTransactions();
 
         $this->assertCount(2, $transactions);
-        $this->assertEquals($money, $transaction->getAmount());
-        $this->assertEquals($money2, $transaction2->getAmount());
+        $this->assertEquals($money, $transaction->getCurrency());
+        $this->assertEquals($money2, $transaction2->getCurrency());
     }
 }

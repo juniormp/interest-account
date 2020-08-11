@@ -23,7 +23,7 @@ class DepositFundsTest extends TestCase
 
         $result = $subject->execute(new DepositFundsCommand($id, $amount));
 
-        $this->assertEquals($amount, $result->getAmount()->getValue());
-        $this->assertEquals(CurrencyType::GBP, $result->getAmount()->getCurrencyType());
+        $this->assertEquals($amount, $result->getAmount());
+        $this->assertEquals(CurrencyType::GBP, $result->getCurrency()->getCurrencyType());
     }
 }

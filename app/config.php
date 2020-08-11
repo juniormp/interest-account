@@ -1,6 +1,7 @@
 <?php
 
 use Chip\InterestAccount\Application\DepositFunds;
+use Chip\InterestAccount\Application\ListTransactions;
 use Chip\InterestAccount\Application\OpenAccount;
 use Chip\InterestAccount\Domain\InterestRate\ApplyInterestRateService;
 use Chip\InterestAccount\Domain\InterestRate\InterestRatePolicyBuilder;
@@ -28,6 +29,12 @@ return [
 
     DepositFunds::class => function () {
         return new DepositFunds(
+            UserProvider::getInstance()
+        );
+    },
+
+    ListTransactions::class => function (){
+        return new ListTransactions(
             UserProvider::getInstance()
         );
     }
