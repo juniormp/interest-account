@@ -48,4 +48,11 @@ class User
     {
         return $this->account;
     }
+
+    public function getTransactions(): array
+    {
+        $account = $this->getAccount();
+
+        return $account->getTransactions();
+    }
 }

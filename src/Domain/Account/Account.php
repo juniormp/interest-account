@@ -4,17 +4,25 @@ namespace Chip\InterestAccount\Domain\Account;
 
 use Chip\InterestAccount\Domain\InterestRate\InterestRate;
 use Chip\InterestAccount\Domain\Money\Money;
+use Chip\InterestAccount\Domain\Transaction\Transaction;
 
 /**
  * @property string $status
  * @property Money $balance
  * @property InterestRate $interestRate
+ * @property array $transactions
  */
 class Account
 {
     private $status;
     private $balance;
     private $interestRate;
+    private $transactions;
+
+    public function __construct()
+    {
+        $this->transactions = [];
+    }
 
     public function setStatus(string $status): Account
     {
@@ -52,5 +60,18 @@ class Account
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function deposit(Money $amount): Transaction
+    {
+        $transaction = new Transaction(date("Y-m-d H:i:s"), $amount);
+        array_push($this->transactions, $transaction);
+
+        return $transaction;
+    }
+
+    public function getTransactions(): array
+    {
+        return $this->transactions;
     }
 }
