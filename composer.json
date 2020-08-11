@@ -11,7 +11,8 @@
   },
   "require": {
     "friendsofphp/php-cs-fixer": "^2.16",
-    "php-di/php-di": "^6.2"
+    "php-di/php-di": "^6.2",
+    "guzzlehttp/guzzle": "^7.0"
   },
   "scripts": {
     "lint" : "./vendor/bin/php-cs-fixer fix src/",
