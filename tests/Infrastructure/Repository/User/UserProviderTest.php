@@ -1,12 +1,13 @@
 <?php
 
-use Chip\InterestAccount\Domain\Account\Account;
-use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\User\User;
 use Chip\InterestAccount\Domain\User\UUID;
 use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserAlreadyHasAccount;
 use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserNotFoundException;
 use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
+use Chip\InterestAccount\Tests\Support\AccountSupportFactory;
+use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
+use Chip\InterestAccount\Tests\Support\UserSupportFactory;
 use PHPUnit\Framework\TestCase;
 
 class UserProviderTest extends TestCase
@@ -33,17 +34,15 @@ class UserProviderTest extends TestCase
 
     public function test_should_save_user()
     {
-        $user = new User();
-        $account = new Account();
-        $income = new Money();
         $id = UUID::v4();
-        $user->setId($id)->setAccount($account)->setIncome($income);
+        $income = MoneySupportFactory::getInstance()::build();
+        $account = AccountSupportFactory::getInstance()::build();
+        $user = UserSupportFactory::getInstance()::withId($id)::withAccount($account)::withIncome($income)::build();
 
         $this->subject->save($user);
 
         $this->assertEquals(1, $this->subject->count());
         $savedUser = $this->subject->offsetGet($user);
-
         $this->assertSame($account, $savedUser->getAccount());
         $this->assertSame($income, $savedUser->getIncome());
         $this->assertSame($id, $savedUser->getId());
@@ -51,11 +50,10 @@ class UserProviderTest extends TestCase
 
     public function test_should_return_updated_user_after_saving()
     {
-        $user = new User();
-        $account = new Account();
-        $income = new Money();
         $id = UUID::v4();
-        $user->setId($id)->setAccount($account)->setIncome($income);
+        $income = MoneySupportFactory::getInstance()::build();
+        $account = AccountSupportFactory::getInstance()::build();
+        $user = UserSupportFactory::getInstance()::withId($id)::withAccount($account)::withIncome($income)::build();
 
         $result = $this->subject->save($user);
 
@@ -67,9 +65,8 @@ class UserProviderTest extends TestCase
 
     public function test_should_find_user_by_id()
     {
-        $user = new User();
         $id = UUID::v4();
-        $user->setId($id);
+        $user = UserSupportFactory::getInstance()::withId($id)::build();
         $this->subject->save($user);
 
         $result = $this->subject->findById($id);
@@ -79,11 +76,10 @@ class UserProviderTest extends TestCase
 
     public function test_should_throw_exception_when_saving_if_user_has_already_an_account()
     {
-        $user = new User();
-        $account = new Account();
-        $income = new Money();
         $id = UUID::v4();
-        $user->setId($id)->setAccount($account)->setIncome($income);
+        $income = MoneySupportFactory::getInstance()::build();
+        $account = AccountSupportFactory::getInstance()::build();
+        $user = UserSupportFactory::getInstance()::withId($id)::withAccount($account)::withIncome($income)::build();
         UserProvider::getInstance()->save($user);
 
         $user = new User();

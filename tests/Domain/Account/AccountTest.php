@@ -2,8 +2,7 @@
 
 
 use Chip\InterestAccount\Domain\Account\Account;
-use Chip\InterestAccount\Domain\Money\CurrencyType;
-use Chip\InterestAccount\Domain\Money\MoneyFactory;
+use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
 use PHPUnit\Framework\TestCase;
 
 class AccountTest extends TestCase
@@ -11,16 +10,15 @@ class AccountTest extends TestCase
     public function test_should_deposit_amount_into_account()
     {
         $subject = new Account();
-        $moneyFactory = new MoneyFactory();
-        $money = $moneyFactory->create(500.0, CurrencyType::GBP);
-        $money2 = $moneyFactory->create(250.0, CurrencyType::GBP);
-        $transaction = $subject->deposit($money);
-        $transaction2 = $subject->deposit($money2);
+        $amount = MoneySupportFactory::getInstance()::withAmount(500.00)::build();
+        $amount2 = MoneySupportFactory::getInstance()::withAmount(5250.00)::build();
+        $transaction = $subject->deposit($amount);
+        $transaction2 = $subject->deposit($amount2);
 
         $transactions = $subject->getTransactions();
 
         $this->assertCount(2, $transactions);
-        $this->assertEquals($money, $transaction->getCurrency());
-        $this->assertEquals($money2, $transaction2->getCurrency());
+        $this->assertEquals($amount, $transaction->getCurrency());
+        $this->assertEquals($amount2, $transaction2->getCurrency());
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
 
-use Chip\InterestAccount\Domain\InterestRate\InterestRate;
 use Chip\InterestAccount\Domain\InterestRate\InterestRateFactory;
+use Chip\InterestAccount\Tests\Support\InterestRateSupportFactory;
 use PHPUnit\Framework\TestCase;
 
 class InterestRateFactoryTest extends TestCase
@@ -10,8 +10,7 @@ class InterestRateFactoryTest extends TestCase
     public function test_should_return_interest_rate_with_the_correct_data()
     {
         $subject = new InterestRateFactory();
-        $interestRate = new InterestRate();
-        $interestRate->setRate(0.5);
+        $interestRate = InterestRateSupportFactory::getInstance()::withRate(0.5)::build();
 
         $result = $subject->create($interestRate->getRate());
 

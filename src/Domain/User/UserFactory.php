@@ -7,7 +7,7 @@ use Chip\InterestAccount\Domain\Money\Money;
 
 class UserFactory
 {
-    public function create(string $id, Money $income, Account $account): User
+    public function create(string $id, ?Money $income, ?Account $account): User
     {
         $user = new User();
 

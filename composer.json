@@ -18,6 +18,7 @@
   "scripts": {
     "lint" : "./vendor/bin/php-cs-fixer fix src/",
     "test" : "./vendor/bin/phpunit",
+    "complete": "./vendor/bin/php-cs-fixer fix src/ && ./vendor/bin/phpunit",
     "build": "composer update && composer lint && composer test"
   }
 }

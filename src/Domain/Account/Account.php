@@ -31,13 +31,13 @@ class Account
         return $this;
     }
 
-    public function setBalance(Money $balance): Account
+    public function setBalance(?Money $balance): Account
     {
         $this->balance = $balance;
         return $this;
     }
 
-    public function setInterestRate(InterestRate $interestRate): Account
+    public function setInterestRate(?InterestRate $interestRate): Account
     {
         $this->interestRate = $interestRate;
         return $this;
@@ -104,5 +104,11 @@ class Account
     public function getReferenceId(): string
     {
         return $this->referenceId;
+    }
+
+    public function setTransactions(array $transactions): Account
+    {
+        $this->transactions = $transactions;
+        return $this;
     }
 }

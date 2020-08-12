@@ -4,6 +4,7 @@
 use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\Payout\Payout;
 use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
+use Chip\InterestAccount\Tests\Support\PayoutSupportFactory;
 use PHPUnit\Framework\TestCase;
 
 class PayoutProviderTest extends TestCase
@@ -50,16 +51,17 @@ class PayoutProviderTest extends TestCase
 
     public function test_should_return_all_payouts_by_reference_id()
     {
-        $id = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
-        $money = $this->createMock(Money::class);
-        $payout = new Payout($id, $money);
-        $payout2 = new Payout("bbb00000-2b32-4964-aaeb-7d3c065bc0f0", $money);
-        $payout3 = new Payout($id, $money);
+        $referenceId = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
+        $amount = $this->createMock(Money::class);
+        $payout = PayoutSupportFactory::getInstance()::withReferenceId($referenceId)::withAmount($amount)::build();
+        $payout2 = PayoutSupportFactory::getInstance()::withReferenceId("bbb00000-2b32-4964-aaeb-7d3c065bc0f0")
+            ::withAmount($amount)::build();
+        $payout3 = PayoutSupportFactory::getInstance()::withReferenceId($referenceId)::withAmount($amount)::build();
         $this->subject::save($payout);
         $this->subject::save($payout2);
         $this->subject::save($payout3);
 
-        $result = $this->subject->getAllPayoutsByUserId($id);
+        $result = $this->subject->getAllPayoutsByUserId($referenceId);
 
         $this->assertCount(2, $result);
     }
@@ -67,16 +69,17 @@ class PayoutProviderTest extends TestCase
     public function test_should_remove_payout_by_user_id()
     {
         $this->subject->cleanPayouts();
-        $id = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
-        $money = $this->createMock(Money::class);
-        $payout = new Payout($id, $money);
-        $payout2 = new Payout("bbb00000-2b32-4964-aaeb-7d3c065bc0f0", $money);
-        $payout3 = new Payout($id, $money);
+        $referenceId = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
+        $amount = $this->createMock(Money::class);
+        $payout = PayoutSupportFactory::getInstance()::withReferenceId($referenceId)::withAmount($amount)::build();
+        $payout2 = PayoutSupportFactory::getInstance()::withReferenceId("bbb00000-2b32-4964-aaeb-7d3c065bc0f0")
+            ::withAmount($amount)::build();
+        $payout3 = PayoutSupportFactory::getInstance()::withReferenceId($referenceId)::withAmount($amount)::build();
         $this->subject::save($payout);
         $this->subject::save($payout2);
         $this->subject::save($payout3);
 
-        $this->subject->removePayoutByUserId($id);
+        $this->subject->removePayoutByUserId($referenceId);
         $this->assertCount(1, $this->subject::getAll());
         $this->assertEquals($payout2, $this->subject::getAll()[0]);
     }
@@ -84,11 +87,12 @@ class PayoutProviderTest extends TestCase
     public function test_should_reorder_array_index_after_removing_payout()
     {
         $this->subject->cleanPayouts();
-        $id = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
-        $money = $this->createMock(Money::class);
-        $payout = new Payout($id, $money);
-        $payout2 = new Payout("bbb00000-2b32-4964-aaeb-7d3c065bc0f0", $money);
-        $payout3 = new Payout($id, $money);
+        $referenceId = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
+        $amount = $this->createMock(Money::class);
+        $payout = PayoutSupportFactory::getInstance()::withReferenceId($referenceId)::withAmount($amount)::build();
+        $payout2 = PayoutSupportFactory::getInstance()::withReferenceId("bbb00000-2b32-4964-aaeb-7d3c065bc0f0")
+            ::withAmount($amount)::build();
+        $payout3 = PayoutSupportFactory::getInstance()::withReferenceId($referenceId)::withAmount($amount)::build();
         $this->subject::save($payout);
         $this->subject::save($payout2);
         $this->subject::save($payout3);
@@ -96,7 +100,7 @@ class PayoutProviderTest extends TestCase
         $key = array_search($payout2, $this->subject::getAll());
         $this->assertEquals(1, $key);
 
-        $this->subject->removePayoutByUserId($id);
+        $this->subject->removePayoutByUserId($referenceId);
 
         $key = array_search($payout2, $this->subject::getAll());
         $this->assertEquals(0, $key);

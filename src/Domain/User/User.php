@@ -28,13 +28,13 @@ class User
         return $this->id;
     }
 
-    public function setIncome(Money $income): User
+    public function setIncome(?Money $income): User
     {
         $this->income = $income;
         return $this;
     }
 
-    public function setAccount(Account $account): User
+    public function setAccount(?Account $account): User
     {
         $this->account = $account;
         return $this;

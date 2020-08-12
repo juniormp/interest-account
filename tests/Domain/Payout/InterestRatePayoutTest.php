@@ -2,15 +2,16 @@
 
 
 use Chip\InterestAccount\Domain\Account\Account;
-use Chip\InterestAccount\Domain\InterestRate\InterestRate;
 use Chip\InterestAccount\Domain\Money\CurrencyType;
 use Chip\InterestAccount\Domain\Money\MoneyFactory;
 use Chip\InterestAccount\Domain\Payout\InterestRatePayoutService;
 use Chip\InterestAccount\Domain\Payout\PayoutFactory;
-use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\Payout\Exception\NegativeAmountException;
 use Chip\InterestAccount\Domain\Payout\Payout;
 use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
+use Chip\InterestAccount\Tests\Support\InterestRateSupportFactory;
+use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
+use Chip\InterestAccount\Tests\Support\PayoutSupportFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
@@ -24,10 +25,8 @@ class InterestRatePayoutTest extends TestCase
         $payoutFactory = $this->createMock(PayoutFactory::class);
         $moneyFactory = $this->createMock(MoneyFactory::class);
         $subject = new InterestRatePayoutService($payoutProvider, $payoutFactory, $moneyFactory);
-        $userBalance = new Money();
-        $userBalance->setValue(5000.0);
-        $interestRate = new InterestRate();
-        $interestRate->setRate(1.02);
+        $userBalance = MoneySupportFactory::getInstance()::withAmount(5000)::build();
+        $interestRate = InterestRateSupportFactory::getInstance()::withRate(1.02)::build();
 
         $result = $subject->calculate($userBalance, $interestRate);
 
@@ -42,7 +41,7 @@ class InterestRatePayoutTest extends TestCase
         $moneyFactory = $this->createMock(MoneyFactory::class);
         $subject = new InterestRatePayoutService($payoutProvider, $payoutFactory, $moneyFactory);
         $account = Mockery::spy(Account::class);
-        $amount = (new Money())->setValue(1.0);
+        $amount = MoneySupportFactory::getInstance()::withAmount(1.0)::build();
 
         $subject->deposit($account, $amount);
 
@@ -56,7 +55,7 @@ class InterestRatePayoutTest extends TestCase
         $moneyFactory = $this->createMock(MoneyFactory::class);
         $subject = new InterestRatePayoutService($payoutProvider, $payoutFactory, $moneyFactory);
         $account = Mockery::spy(Account::class);
-        $amount = (new Money())->setValue(1.1);
+        $amount = MoneySupportFactory::getInstance()::withAmount(1.1)::build();
 
         $subject->deposit($account, $amount);
 
@@ -71,7 +70,7 @@ class InterestRatePayoutTest extends TestCase
         $subject = new InterestRatePayoutService($payoutProvider, $payoutFactory, $moneyFactory);
         $account = $this->createMock(Account::class);
         $payout = $this->createMock(Payout::class);
-        $amount = (new Money())->setValue(0.99);
+        $amount = MoneySupportFactory::getInstance()::withAmount(0.99)::build();
         $account->method('getReferenceId')->willReturn('fake-id');
         $payoutFactory->method('create')->with('fake-id', $amount)->willReturn($payout);
 
@@ -87,7 +86,7 @@ class InterestRatePayoutTest extends TestCase
         $moneyFactory = $this->createMock(MoneyFactory::class);
         $subject = new InterestRatePayoutService($payoutProvider, $payoutFactory, $moneyFactory);
         $account = Mockery::spy(Account::class);
-        $amount = (new Money())->setValue(0);
+        $amount = MoneySupportFactory::getInstance()::withAmount(0)::build();
 
         $subject->deposit($account, $amount);
 
@@ -102,7 +101,7 @@ class InterestRatePayoutTest extends TestCase
         $moneyFactory = $this->createMock(MoneyFactory::class);
         $subject = new InterestRatePayoutService($payoutProvider, $payoutFactory, $moneyFactory);
         $account = Mockery::spy(Account::class);
-        $amount = (new Money())->setValue(-0.1);
+        $amount = MoneySupportFactory::getInstance()::withAmount(-0.1)::build();
 
         $this->expectException(NegativeAmountException::class);
         $this->expectExceptionMessage("AMOUNT CAN NOT BE NEGATIVE");
@@ -117,10 +116,10 @@ class InterestRatePayoutTest extends TestCase
         $moneyFactory = $this->createMock(MoneyFactory::class);
         $subject = new InterestRatePayoutService($payoutProvider, $payoutFactory, $moneyFactory);
         $id = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
-        $amount = 0.50;
+        $amount = MoneySupportFactory::getInstance()::withAmount(0.50)::build();
         $payouts = [
-            new Payout($id, new Money($amount, CurrencyType::GBP)),
-            new Payout($id, new Money($amount, CurrencyType::GBP))
+            PayoutSupportFactory::getInstance()::withAmount($amount)::build(),
+            PayoutSupportFactory::getInstance()::withAmount($amount)::build()
         ];
         $payoutProvider->shouldReceive('getAllPayoutsByUserId')->with($id)->andReturn($payouts);
 

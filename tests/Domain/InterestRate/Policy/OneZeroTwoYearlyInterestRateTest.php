@@ -1,10 +1,10 @@
 <?php
 
-use Chip\InterestAccount\Domain\Account\Account;
-use Chip\InterestAccount\Domain\InterestRate\InterestRate;
 use Chip\InterestAccount\Domain\InterestRate\Policy\OneZeroTwoYearlyInterestRate;
-use Chip\InterestAccount\Domain\Money\Money;
-use Chip\InterestAccount\Domain\User\User;
+use Chip\InterestAccount\Tests\Support\AccountSupportFactory;
+use Chip\InterestAccount\Tests\Support\InterestRateSupportFactory;
+use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
+use Chip\InterestAccount\Tests\Support\UserSupportFactory;
 use PHPUnit\Framework\TestCase;
 
 class OneZeroTwoYearlyInterestRateTest extends TestCase
@@ -12,10 +12,11 @@ class OneZeroTwoYearlyInterestRateTest extends TestCase
     public function test_should_apply_rate_when_income_is_greater_than_five_thousand()
     {
         $subject = new OneZeroTwoYearlyInterestRate();
-        $income = 5000.00;
         $rateApplied = OneZeroTwoYearlyInterestRate::ONE_ZERO_TWO;
-        $account = $this->buildAccount();
-        $user = $this->buildUser($account, $income);
+        $interestRate = InterestRateSupportFactory::getInstance()::withRate(0)::build();
+        $income = MoneySupportFactory::getInstance()::withAmount(5001.00)::build();
+        $account = AccountSupportFactory::getInstance()::withInterestRate($interestRate)::build();
+        $user = UserSupportFactory::getInstance()::withIncome($income)::withAccount($account)::build();
 
         $result = $subject->apply($user);
 
@@ -25,10 +26,11 @@ class OneZeroTwoYearlyInterestRateTest extends TestCase
     public function test_should_apply_rate_when_income_is_equal_to_five_thousand()
     {
         $subject = new OneZeroTwoYearlyInterestRate();
-        $income = 5000.00;
         $rateApplied = OneZeroTwoYearlyInterestRate::ONE_ZERO_TWO;
-        $account = $this->buildAccount();
-        $user = $this->buildUser($account, $income);
+        $interestRate = InterestRateSupportFactory::getInstance()::withRate(0)::build();
+        $income = MoneySupportFactory::getInstance()::withAmount(5000.00)::build();
+        $account = AccountSupportFactory::getInstance()::withInterestRate($interestRate)::build();
+        $user = UserSupportFactory::getInstance()::withIncome($income)::withAccount($account)::build();
 
         $result = $subject->apply($user);
 
@@ -38,10 +40,11 @@ class OneZeroTwoYearlyInterestRateTest extends TestCase
     public function test_should_not_apply_rate_when_income_is_less_than_five_thousand()
     {
         $subject = new OneZeroTwoYearlyInterestRate();
-        $income = 4999.00;
+        $interestRate = InterestRateSupportFactory::getInstance()::withRate(0)::build();
+        $income = MoneySupportFactory::getInstance()::withAmount(4999.9)::build();
+        $account = AccountSupportFactory::getInstance()::withInterestRate($interestRate)::build();
+        $user = UserSupportFactory::getInstance()::withIncome($income)::withAccount($account)::build();
         $rateNotApplied = 0.0;
-        $account = $this->buildAccount();
-        $user = $this->buildUser($account, $income);
 
         $result = $subject->apply($user);
 
@@ -51,35 +54,14 @@ class OneZeroTwoYearlyInterestRateTest extends TestCase
     public function test_should_not_apply_rate_when_income_is_equal_to_zero()
     {
         $subject = new OneZeroTwoYearlyInterestRate();
-        $income = 0.0;
+        $interestRate = InterestRateSupportFactory::getInstance()::withRate(0)::build();
+        $income = MoneySupportFactory::getInstance()::withAmount(0.0)::build();
+        $account = AccountSupportFactory::getInstance()::withInterestRate($interestRate)::build();
+        $user = UserSupportFactory::getInstance()::withIncome($income)::withAccount($account)::build();
         $rateNotApplied = 0.0;
-        $account = $this->buildAccount();
-        $user = $this->buildUser($account, $income);
 
         $result = $subject->apply($user);
 
         $this->assertEquals($rateNotApplied, $result->getInterestRate());
-    }
-
-    public function buildUser(Account $account, float $value): User
-    {
-        $user = new User();
-        $income = new Money();
-        $income->setValue($value);
-
-        return $user
-            ->setAccount($account)
-            ->setIncome($income);
-    }
-
-    public function buildAccount(): Account
-    {
-        $account = new Account();
-        $interestRate = new InterestRate();
-        $interestRate
-            ->setRate(0.0);
-
-        return $account
-            ->setInterestRate($interestRate);
     }
 }

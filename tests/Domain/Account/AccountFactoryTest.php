@@ -1,11 +1,10 @@
 <?php
 
-use Chip\InterestAccount\Domain\Account\Account;
 use Chip\InterestAccount\Domain\Account\AccountFactory;
 use Chip\InterestAccount\Domain\Account\AccountStatus;
-use Chip\InterestAccount\Domain\InterestRate\InterestRate;
-use Chip\InterestAccount\Domain\Money\CurrencyType;
-use Chip\InterestAccount\Domain\Money\Money;
+use Chip\InterestAccount\Tests\Support\AccountSupportFactory;
+use Chip\InterestAccount\Tests\Support\InterestRateSupportFactory;
+use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
 use PHPUnit\Framework\TestCase;
 
 class AccountFactoryTest extends TestCase
@@ -13,40 +12,15 @@ class AccountFactoryTest extends TestCase
     public function test_should_return_account_with_the_correct_data()
     {
         $subject = new AccountFactory();
+        $referenceId = "3f950b7d-1f8f-4f86-87cb-ab819ad6cabd";
         $status = AccountStatus::ACTIVE;
-        $balance = $this->buildBalance();
-        $interestRate = $this->buildInterestRate();
-        $account = $this->buildAccount($status, $balance, $interestRate);
+        $interestRate = InterestRateSupportFactory::getInstance()::withRate(0.5)::build();
+        $balance = MoneySupportFactory::getInstance()::withAmount(5000.00)::build();
+        $account = AccountSupportFactory::getInstance()::withReferenceId($referenceId)::withBalance($balance)
+            ::withStatus($status)::withInterestRate($interestRate)::build();
 
-        $result = $subject->create($status, $balance, $interestRate);
+        $result = $subject->create($referenceId, $status, $balance, $interestRate);
 
         $this->assertEquals($account, $result);
-    }
-
-    private function buildAccount(string $status, Money $balance, InterestRate $interestRate): Account
-    {
-        $account = new Account();
-        $account
-            ->setStatus($status)
-            ->setBalance($balance)
-            ->setInterestRate($interestRate);
-
-        return $account;
-    }
-
-    public function buildBalance(): Money
-    {
-        $balance = new Money();
-
-        return $balance
-            ->setValue(5000.00)
-            ->setCurrencyType(CurrencyType::GBP);
-    }
-
-    public function buildInterestRate(): InterestRate
-    {
-        $interestRate = new InterestRate();
-
-        return $interestRate->setRate(0.5);
     }
 }
