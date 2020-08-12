@@ -19,4 +19,9 @@ class InterestRate
     {
         return $this->rate;
     }
+
+    public function convertAnnualRateToThreeDaysRate(): float
+    {
+        return pow((1 + pow((1 + $this->getRate() / 100), 1/12) - 1), 1/10) - 1;
+    }
 }
