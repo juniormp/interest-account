@@ -1,13 +1,18 @@
 <?php
 
+use Chip\InterestAccount\Application\CalculatePayout;
 use Chip\InterestAccount\Application\DepositFunds;
 use Chip\InterestAccount\Application\ListTransactions;
 use Chip\InterestAccount\Application\OpenAccount;
 use Chip\InterestAccount\Domain\InterestRate\ApplyInterestRateService;
 use Chip\InterestAccount\Domain\InterestRate\InterestRatePolicyBuilder;
+use Chip\InterestAccount\Domain\Money\MoneyFactory;
+use Chip\InterestAccount\Domain\Payout\InterestRatePayoutService;
+use Chip\InterestAccount\Domain\Payout\PayoutFactory;
 use Chip\InterestAccount\Domain\User\UserFactory;
 use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\GetUserIncomeService;
 use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\StatsAPIClient;
+use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
 use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
 use GuzzleHttp\Client as HttpClient;
 
@@ -36,6 +41,18 @@ return [
     ListTransactions::class => function (){
         return new ListTransactions(
             UserProvider::getInstance()
+        );
+    },
+
+    CalculatePayout::class => function () {
+        return new CalculatePayout(
+            new InterestRatePayoutService(
+                new PayoutProvider(),
+                new PayoutFactory(),
+                new MoneyFactory()
+            ),
+            UserProvider::getInstance(),
+            new PayoutProvider()
         );
     }
 ];
