@@ -24,7 +24,12 @@ class Payout
         return $this->referenceId;
     }
 
-    public function getAmount(): Money
+    public function getAmount(): float
+    {
+        return $this->amount->getValue();
+    }
+
+    public function getMoney(): Money
     {
         return $this->amount;
     }

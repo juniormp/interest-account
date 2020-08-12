@@ -14,6 +14,7 @@ use Chip\InterestAccount\Domain\Transaction\Transaction;
  */
 class Account
 {
+    private $referenceId;
     private $status;
     private $balance;
     private $interestRate;
@@ -49,6 +50,11 @@ class Account
         return $interestRate->getRate();
     }
 
+    public function getInterestRateEntity(): InterestRate
+    {
+        return $this->interestRate;
+    }
+
     public function applyInterestRate(float $rate): Account
     {
         $interestRate = new InterestRate();
@@ -73,5 +79,30 @@ class Account
     public function getTransactions(): array
     {
         return $this->transactions;
+    }
+
+    public function getBalance(): Money
+    {
+        $balance = array_reduce($this->getTransactions(), function ($result, $transaction) {
+            $result += $transaction->getAmount();
+            return $result;
+        });
+
+        if (is_null($balance)) {
+            $balance = 0;
+        }
+
+        return new Money($balance);
+    }
+
+    public function setReferenceId(string $id): Account
+    {
+        $this->referenceId = $id;
+        return $this;
+    }
+
+    public function getReferenceId(): string
+    {
+        return $this->referenceId;
     }
 }

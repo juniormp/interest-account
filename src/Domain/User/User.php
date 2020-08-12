@@ -3,6 +3,7 @@
 namespace Chip\InterestAccount\Domain\User;
 
 use Chip\InterestAccount\Domain\Account\Account;
+use Chip\InterestAccount\Domain\InterestRate\InterestRate;
 use Chip\InterestAccount\Domain\Money\Money;
 
 /**
@@ -54,5 +55,19 @@ class User
         $account = $this->getAccount();
 
         return $account->getTransactions();
+    }
+
+    public function getInterestRate(): float
+    {
+        $account = $this->getAccount();
+
+        return  $account->getInterestRate();
+    }
+
+    public function getInterestRateEntity(): InterestRate
+    {
+        $account = $this->getAccount();
+
+        return  $account->getInterestRateEntity();
     }
 }

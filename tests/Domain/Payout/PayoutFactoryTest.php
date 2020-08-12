@@ -16,6 +16,6 @@ class PayoutFactoryTest extends TestCase
         $result = $subject->create($referenceId, $amount);
 
         $this->assertEquals($referenceId, $result->getReferenceId());
-        $this->assertEquals($amount, $result->getAmount());
+        $this->assertEquals($amount, $result->getMoney());
     }
 }

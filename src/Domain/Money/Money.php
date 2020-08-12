@@ -11,6 +11,12 @@ class Money
     private $value;
     private $currencyType;
 
+    public function __construct(float $value = 0.0, string $currencyType = CurrencyType::GBP)
+    {
+        $this->value = $value;
+        $this->currencyType = $currencyType;
+    }
+
     public function setValue(float $value): Money
     {
         $this->value = $value;
