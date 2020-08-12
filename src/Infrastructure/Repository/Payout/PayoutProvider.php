@@ -2,6 +2,7 @@
 
 namespace Chip\InterestAccount\Infrastructure\Repository\Payout;
 
+use ArrayObject;
 use Chip\InterestAccount\Domain\Payout\Payout;
 use Exception;
 
@@ -48,5 +49,24 @@ class PayoutProvider implements PayoutRepository
     public static function getAll(): array
     {
         return self::$payouts;
+    }
+
+    public static function getAllPayoutsByUserId(string $id): array
+    {
+        return array_filter(self::$payouts, function ($payout) use ($id) {
+            return $payout->getReferenceId() === $id;
+        });
+    }
+
+    public static function removePayoutByUserId(string $id)
+    {
+        $payouts = self::getAllPayoutsByUserId($id);
+
+        self::$payouts = array_values(array_diff_key(self::$payouts, $payouts));
+    }
+
+    public function cleanPayouts()
+    {
+        self::$payouts = [];
     }
 }
