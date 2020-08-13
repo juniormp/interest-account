@@ -2,7 +2,6 @@
 
 namespace Chip\InterestAccount\Infrastructure\Repository\Payout;
 
-use ArrayObject;
 use Chip\InterestAccount\Domain\Payout\Payout;
 use Exception;
 
