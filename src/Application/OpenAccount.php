@@ -44,6 +44,7 @@ class OpenAccount
     {
         $income = new Money();
         $account = new Account();
+        $account->setReferenceId($command->getId());
         $account->setStatus(AccountStatus::ACTIVE);
 
         return $this->userFactory->create($command->getId(), $income, $account);

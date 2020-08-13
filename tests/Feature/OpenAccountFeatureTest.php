@@ -3,10 +3,10 @@
 use Chip\InterestAccount\Application\Command\OpenAccountCommand;
 use Chip\InterestAccount\Application\OpenAccount;
 use Chip\InterestAccount\Domain\Account\AccountStatus;
-use Chip\InterestAccount\Domain\User\User;
 use Chip\InterestAccount\Domain\User\UUID;
 use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserAlreadyHasAccount;
-use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
+use Chip\InterestAccount\Tests\Support\Repository\UserSupportRepository;
+use Chip\InterestAccount\Tests\Support\UserSupportFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,9 +14,18 @@ use PHPUnit\Framework\TestCase;
  */
 class OpenAccountFeatureTest extends TestCase
 {
+    private $container;
+    private $subject;
+
+    protected function setUp(): void
+    {
+        $this->container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
+        $this->subject = $this->container->get(OpenAccount::class);
+    }
+
     protected function tearDown(): void
     {
-        UserProvider::getInstance()->destroy();
+        UserSupportRepository::cleanUserData();
     }
 
     /**
@@ -27,17 +36,16 @@ class OpenAccountFeatureTest extends TestCase
      */
     public function test_create_an_interest_account()
     {
-        $container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
-        $service = $container->get(OpenAccount::class);
         $id = UUID::v4();
         $income = 499999.0;
         $interestRate = 1.02;
         $statusAccount = AccountStatus::ACTIVE;
 
-        $user = $service->execute(new OpenAccountCommand($id));
+        $user = $this->subject->execute(new OpenAccountCommand($id));
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($income, $user->getIncome()->getValue());
+        $this->assertEquals($id, $user->getAccount()->getReferenceId());
         $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
         $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
     }
@@ -50,18 +58,14 @@ class OpenAccountFeatureTest extends TestCase
      */
     public function test_users_can_have_only_one_interest_account()
     {
-        $user = new User();
         $id = UUID::v4();
-        $user->setId($id);
-
-        UserProvider::getInstance()->save($user);
-        $container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
-        $service = $container->get(OpenAccount::class);
+        $user = UserSupportFactory::getInstance()::withId($id)::build();
+        UserSupportRepository::persistUser($user);
 
         $this->expectException(UserAlreadyHasAccount::class);
         $this->expectExceptionMessage(UserAlreadyHasAccount::MESSAGE);
 
-        $service->execute(new OpenAccountCommand($id));
+        $this->subject->execute(new OpenAccountCommand($id));
     }
 
     /**
@@ -71,22 +75,17 @@ class OpenAccountFeatureTest extends TestCase
      */
     public function test_interest_rate_is_set_to_zero_dot_five_if_income_per_month_is_not_know()
     {
-        // This id is mocked on swagger hub and always will bring tha income value as 0
+        // This id is mocked on swagger hub and always will bring the income value as 0
         $id = "aaa00000-2b32-4964-aaeb-7d3c065bc0f0";
-        $user = new User();
-        $user->setId($id);
         $income = 0;
         $interestRate = 0.5;
         $statusAccount = AccountStatus::ACTIVE;
 
-        $container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
-
-        $service = $container->get(OpenAccount::class);
-
-        $user = $service->execute(new OpenAccountCommand($id));
+        $user = $this->subject->execute(new OpenAccountCommand($id));
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($income, $user->getIncome()->getValue());
+        $this->assertEquals($id, $user->getAccount()->getReferenceId());
         $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
         $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
     }
@@ -98,22 +97,17 @@ class OpenAccountFeatureTest extends TestCase
      */
     public function test_interest_rate_is_set_to_zero_dot_ninety_three_if_income_per_month_is_less_than_five_thousand()
     {
-        // This id is mocked on swagger hub and always will bring tha income value as 4999
+        // This id is mocked on swagger hub and always will bring the income value as 4999
         $id = "00000000-2b32-4964-aaeb-7d3c065bc0f0";
-        $user = new User();
-        $user->setId($id);
         $income = 4999;
         $interestRate = 0.93;
         $statusAccount = AccountStatus::ACTIVE;
 
-        $container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
-
-        $service = $container->get(OpenAccount::class);
-
-        $user = $service->execute(new OpenAccountCommand($id));
+        $user = $this->subject->execute(new OpenAccountCommand($id));
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($income, $user->getIncome()->getValue());
+        $this->assertEquals($id, $user->getAccount()->getReferenceId());
         $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
         $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
     }
@@ -125,22 +119,17 @@ class OpenAccountFeatureTest extends TestCase
      */
     public function test_interest_rate_is_set_to_one_dot_zero_two_if_income_per_month_is_equal_to_five_thousand()
     {
-        // This id is mocked on swagger hub and always will bring tha income value as 5000
+        // This id is mocked on swagger hub and always will bring the income value as 5000
         $id = "b5a4054d-2b32-4964-aaeb-7d3c065bc0f0";
-        $user = new User();
-        $user->setId($id);
         $income = 5000;
         $interestRate = 1.02;
         $statusAccount = AccountStatus::ACTIVE;
 
-        $container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
-
-        $service = $container->get(OpenAccount::class);
-
-        $user = $service->execute(new OpenAccountCommand($id));
+        $user = $this->subject->execute(new OpenAccountCommand($id));
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($income, $user->getIncome()->getValue());
+        $this->assertEquals($id, $user->getAccount()->getReferenceId());
         $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
         $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
     }
@@ -152,19 +141,13 @@ class OpenAccountFeatureTest extends TestCase
      */
     public function test_interest_rate_is_set_to_one_dot_zero_two_if_income_per_month_is_greater_than_five_thousand()
     {
-        // This id is mocked on swagger hub and always will bring tha income value as 5100
+        // This id is mocked on swagger hub and always will bring the income value as 5100
         $id = "7f71ab26-b0a0-43ab-a8b6-bf6bc7687fe5";
-        $user = new User();
-        $user->setId($id);
         $income = 5100;
         $interestRate = 1.02;
         $statusAccount = AccountStatus::ACTIVE;
 
-        $container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
-
-        $service = $container->get(OpenAccount::class);
-
-        $user = $service->execute(new OpenAccountCommand($id));
+        $user = $this->subject->execute(new OpenAccountCommand($id));
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($income, $user->getIncome()->getValue());
