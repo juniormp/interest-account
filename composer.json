@@ -13,7 +13,8 @@
     "friendsofphp/php-cs-fixer": "^2.16",
     "php-di/php-di": "^6.2",
     "guzzlehttp/guzzle": "^7.0",
-    "hutnikau/job-scheduler": "^0.6.1"
+    "hutnikau/job-scheduler": "^0.6.1",
+    "ext-json": "*"
   },
   "scripts": {
     "lint" : "./vendor/bin/php-cs-fixer fix src/",

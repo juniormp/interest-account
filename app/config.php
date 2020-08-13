@@ -10,7 +10,7 @@ use Chip\InterestAccount\Domain\Money\MoneyFactory;
 use Chip\InterestAccount\Domain\Payout\InterestRatePayoutService;
 use Chip\InterestAccount\Domain\Payout\PayoutFactory;
 use Chip\InterestAccount\Domain\User\UserFactory;
-use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\GetUserIncomeService;
+use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\UserIncomeService;
 use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\StatsAPIClient;
 use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
 use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
@@ -23,7 +23,7 @@ return [
             new ApplyInterestRateService(new InterestRatePolicyBuilder()),
             new UserFactory(),
             UserProvider::getInstance(),
-            new GetUserIncomeService(new StatsAPIClient(new HttpClient([
+            new UserIncomeService(new StatsAPIClient(new HttpClient([
                 'base_uri' => 'https://virtserver.swaggerhub.com/juniormp/StatsAPI/1.0.0/',
                 'defaults' => [
                     'headers' => ['Content-Type' => 'application/json'],

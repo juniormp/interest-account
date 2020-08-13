@@ -2,7 +2,7 @@
 
 namespace Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI;
 
-class GetUserIncomeService
+class UserIncomeService
 {
     private $statsAPIClient;
 

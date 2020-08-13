@@ -1,6 +1,7 @@
 <?php
 
 use Chip\InterestAccount\Application\Command\OpenAccountCommand;
+use Chip\InterestAccount\Application\Command\Validation\ValidationError;
 use Chip\InterestAccount\Application\OpenAccount;
 use Chip\InterestAccount\Domain\Account\AccountStatus;
 use Chip\InterestAccount\Domain\User\UUID;
@@ -48,6 +49,22 @@ class OpenAccountFeatureTest extends TestCase
         $this->assertEquals($id, $user->getAccount()->getReferenceId());
         $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
         $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
+    }
+
+    /**
+     * Since the client service wants to open an interest account
+     * And informed the user id not formatted to (UUIDv4)
+     * When entering this information through the interface
+     * Then should validate and thrown a id format exception
+     */
+    public function test_should_thrown_exception_when_id_is_not_formatted()
+    {
+        $id = "id-not-formatted";
+
+        $this->expectException(ValidationError::class);
+        $this->expectExceptionMessage("ID SHOULD BE UUIDv4 FORMAT");
+
+        $this->subject->execute(new OpenAccountCommand($id));
     }
 
     /**

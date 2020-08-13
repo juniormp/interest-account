@@ -16,4 +16,9 @@ class UserSupportRepository
     {
         UserProvider::getInstance()->save($user);
     }
+
+    public static function getUserById(string $id): User
+    {
+        return UserProvider::getInstance()->findById($id);
+    }
 }

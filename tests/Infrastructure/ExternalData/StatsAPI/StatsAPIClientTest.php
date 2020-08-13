@@ -13,6 +13,9 @@ use PHPUnit\Framework\TestCase;
 
 class StatsAPIClientTest extends TestCase
 {
+    /**
+     * ::getIncomeByUserId
+     */
     public function test_should_get_user_income_by_id()
     {
         $mock = new MockHandler([
@@ -31,6 +34,9 @@ class StatsAPIClientTest extends TestCase
         $this->assertEquals(499999, $response['income']);
     }
 
+    /**
+     * ::getIncomeByUserId
+     */
     public function test_should_throw_stats_api_exception_in_case_of_error()
     {
         $mock = new MockHandler([

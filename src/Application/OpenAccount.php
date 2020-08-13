@@ -9,7 +9,7 @@ use Chip\InterestAccount\Domain\InterestRate\ApplyInterestRateService;
 use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\User\User;
 use Chip\InterestAccount\Domain\User\UserFactory;
-use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\GetUserIncomeService;
+use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\UserIncomeService;
 use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
 
 class OpenAccount
@@ -17,18 +17,18 @@ class OpenAccount
     private $applyInterestRateService;
     private $userFactory;
     private $userProvider;
-    private $getUserIncomeService;
+    private $userIncomeService;
 
     public function __construct(
         ApplyInterestRateService $applyInterestRateService,
         UserFactory $userFactory,
         UserProvider $userProvider,
-        GetUserIncomeService $getUserIncomeService
+        UserIncomeService $userIncomeService
     ) {
         $this->applyInterestRateService = $applyInterestRateService;
         $this->userFactory = $userFactory;
         $this->userProvider = $userProvider;
-        $this->getUserIncomeService = $getUserIncomeService;
+        $this->userIncomeService = $userIncomeService;
     }
 
     public function execute(OpenAccountCommand $command): User
@@ -52,7 +52,7 @@ class OpenAccount
 
     private function setUserIncome(User $user)
     {
-        $incomeValue = $this->getUserIncomeService->getIncome($user->getId());
+        $incomeValue = $this->userIncomeService->getIncome($user->getId());
         $income = $user->getIncome();
         $income->setValue($incomeValue);
 
