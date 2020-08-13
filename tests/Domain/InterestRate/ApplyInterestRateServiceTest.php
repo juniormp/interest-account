@@ -15,12 +15,14 @@ class ApplyInterestRateServiceTest extends TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
         $this->policyOne = Mockery::spy(ZeroNinetyThreeYearlyInterestRate::class);
         $this->policyTwo = Mockery::spy(ZeroNinetyThreeYearlyInterestRate::class);
         $this->policyThree = Mockery::spy(OneZeroTwoYearlyInterestRate::class);
     }
 
+    /**
+     * @covers ::apply
+     */
     public function test_should_apply_interest_rate_to_a_given_user()
     {
         $interestRatePolicyBuilder = $this->createMock(InterestRatePolicyBuilder::class);
@@ -36,7 +38,6 @@ class ApplyInterestRateServiceTest extends TestCase
         $this->policyThree->shouldHaveReceived('apply')->with($user)->once();
 
         $this->assertEquals($user, $result);
-        Mockery::close();
     }
 
     public function buildPolicies(): array
