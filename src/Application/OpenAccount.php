@@ -10,24 +10,24 @@ use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\User\User;
 use Chip\InterestAccount\Domain\User\UserFactory;
 use Chip\InterestAccount\Infrastructure\ExternalData\StatsAPI\UserIncomeService;
-use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
+use Chip\InterestAccount\Infrastructure\Repository\User\UserRepository;
 
 class OpenAccount
 {
     private $applyInterestRateService;
     private $userFactory;
-    private $userProvider;
+    private $userRepository;
     private $userIncomeService;
 
     public function __construct(
         ApplyInterestRateService $applyInterestRateService,
         UserFactory $userFactory,
-        UserProvider $userProvider,
+        UserRepository $userRepository,
         UserIncomeService $userIncomeService
     ) {
         $this->applyInterestRateService = $applyInterestRateService;
         $this->userFactory = $userFactory;
-        $this->userProvider = $userProvider;
+        $this->userRepository = $userRepository;
         $this->userIncomeService = $userIncomeService;
     }
 
@@ -37,7 +37,7 @@ class OpenAccount
         $user = $this->setUserIncome($user);
         $user = $this->applyInterestRateService->apply($user);
 
-        return $this->userProvider->save($user);
+        return $this->userRepository->save($user);
     }
 
     private function createUser(OpenAccountCommand $command): User

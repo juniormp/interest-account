@@ -7,25 +7,29 @@ use Chip\InterestAccount\Application\Command\CalculatePayoutCommand;
 use Chip\InterestAccount\Domain\Money\CurrencyType;
 use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\Payout\InterestRatePayoutService;
-use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
-use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
+use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutRepository;
+use Chip\InterestAccount\Infrastructure\Repository\User\UserRepository;
 
 class CalculatePayout
 {
     private $interestRatePayoutService;
-    private $userProvider;
-    private $payoutProvider;
+    private $userRepository;
+    private $payoutRepository;
 
-    public function __construct(InterestRatePayoutService $interestRatePayoutService, UserProvider $userProvider, PayoutProvider $payoutProvider)
+    public function __construct(
+        InterestRatePayoutService $interestRatePayoutService,
+        UserRepository $userRepository,
+        PayoutRepository $payoutRepository
+    )
     {
         $this->interestRatePayoutService = $interestRatePayoutService;
-        $this->userProvider = $userProvider;
-        $this->payoutProvider = $payoutProvider;
+        $this->userRepository = $userRepository;
+        $this->payoutRepository = $payoutRepository;
     }
 
     public function execute(CalculatePayoutCommand $calculatePayoutCommand)
     {
-        $user = $this->userProvider->findById($calculatePayoutCommand->getId());
+        $user = $this->userRepository->findById($calculatePayoutCommand->getId());
 
         $interestRate = $user->getInterestRateEntity();
         $account = $user->getAccount();
@@ -35,7 +39,7 @@ class CalculatePayout
         $pendingAmount = $this->interestRatePayoutService->getPendingPayoutsAmount($user->getId());
         $totalAmount = new Money(($calculatedAmount->getValue() + $pendingAmount->getValue()), CurrencyType::GBP);
 
-        $this->payoutProvider::removePayoutByUserId($user->getId());
+        $this->payoutRepository::removePayoutByUserId($user->getId());
 
         $this->interestRatePayoutService->deposit($account, $totalAmount);
     }

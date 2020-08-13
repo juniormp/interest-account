@@ -7,20 +7,20 @@ use Chip\InterestAccount\Application\Command\DepositFundsCommand;
 use Chip\InterestAccount\Domain\Money\CurrencyType;
 use Chip\InterestAccount\Domain\Money\MoneyFactory;
 use Chip\InterestAccount\Domain\Transaction\Transaction;
-use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
+use Chip\InterestAccount\Infrastructure\Repository\User\UserRepository;
 
 class DepositFunds
 {
-    private $userProvider;
+    private $userRepository;
 
-    public function __construct(UserProvider $userProvider)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->userProvider = $userProvider;
+        $this->userRepository = $userRepository;
     }
 
     public function execute(DepositFundsCommand $depositFundsCommand): Transaction
     {
-        $user = $this->userProvider->findById($depositFundsCommand->getId());
+        $user = $this->userRepository->findById($depositFundsCommand->getId());
         $account = $user->getAccount();
 
         $moneyFactory = new MoneyFactory();

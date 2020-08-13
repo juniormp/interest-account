@@ -4,20 +4,20 @@
 namespace Chip\InterestAccount\Application;
 
 use Chip\InterestAccount\Application\Command\ListTransactionsCommand;
-use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
+use Chip\InterestAccount\Infrastructure\Repository\User\UserRepository;
 
 class ListTransactions
 {
-    private $userProvider;
+    private $userRepository;
 
-    public function __construct(UserProvider $userProvider)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->userProvider = $userProvider;
+        $this->userRepository = $userRepository;
     }
 
     public function execute(ListTransactionsCommand $listTransactionsCommand): array
     {
-        $user = $this->userProvider->findById($listTransactionsCommand->getId());
+        $user = $this->userRepository->findById($listTransactionsCommand->getId());
 
         return $user->getTransactions();
     }
