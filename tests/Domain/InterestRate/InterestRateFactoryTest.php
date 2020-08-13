@@ -12,7 +12,7 @@ class InterestRateFactoryTest extends TestCase
         $subject = new InterestRateFactory();
         $interestRate = InterestRateSupportFactory::getInstance()::withRate(0.5)::build();
 
-        $result = $subject->create($interestRate->getRate());
+        $result = $subject->create($interestRate->getAnnualRate());
 
         $this->assertEquals($interestRate, $result);
     }

@@ -9,6 +9,6 @@ class InterestRateFactory
     {
         $interestRate = new InterestRate();
 
-        return $interestRate->setRate($rate);
+        return $interestRate->setAnnualRate($rate);
     }
 }

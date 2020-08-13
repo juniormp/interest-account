@@ -3,25 +3,25 @@
 namespace Chip\InterestAccount\Domain\InterestRate;
 
 /**
- * @property float $rate
+ * @property float $annualRate
  */
 class InterestRate
 {
-    private $rate;
+    private $annualRate;
 
-    public function setRate(float $rate): InterestRate
+    public function setAnnualRate(float $annualRate): InterestRate
     {
-        $this->rate = $rate;
+        $this->annualRate = $annualRate;
         return $this;
     }
 
-    public function getRate(): float
+    public function getAnnualRate(): float
     {
-        return $this->rate;
+        return $this->annualRate;
     }
 
     public function convertAnnualRateToThreeDaysRate(): float
     {
-        return pow((1 + pow((1 + $this->getRate() / 100), 1/12) - 1), 1/10) - 1;
+        return pow((1 + pow((1 + $this->getAnnualRate() / 100), 1/12) - 1), 1/10) - 1;
     }
 }

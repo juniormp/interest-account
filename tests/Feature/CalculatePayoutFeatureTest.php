@@ -29,7 +29,7 @@ class CalculatePayoutFeatureTest extends TestCase
     {
         $id = UUID::v4();
         $interestRate = new InterestRate();
-        $interestRate->setRate(1.02);
+        $interestRate->setAnnualRate(1.02);
 
         $account = new Account();
         $account->setReferenceId($id);
@@ -62,7 +62,7 @@ class CalculatePayoutFeatureTest extends TestCase
     {
         $id = UUID::v4();
         $interestRate = new InterestRate();
-        $interestRate->setRate(1.02);
+        $interestRate->setAnnualRate(1.02);
 
         $account = new Account();
         $account->setReferenceId($id);
@@ -98,7 +98,7 @@ class CalculatePayoutFeatureTest extends TestCase
     {
         $id = UUID::v4();
         $interestRate = new InterestRate();
-        $interestRate->setRate(1.02);
+        $interestRate->setAnnualRate(1.02);
 
         $account = new Account();
         $account->setReferenceId($id);

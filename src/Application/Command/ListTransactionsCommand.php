@@ -3,7 +3,6 @@
 namespace Chip\InterestAccount\Application\Command;
 
 use Chip\InterestAccount\Application\Command\Validation\ListTransactionsCommandValidation;
-use Chip\InterestAccount\Application\Command\Validation\OpenAccountCommandValidation;
 
 class ListTransactionsCommand
 {

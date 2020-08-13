@@ -10,7 +10,7 @@ class InterestRateTest extends TestCase
     {
         $subject = new InterestRate();
         $annualRate = 1.02;
-        $subject->setRate($annualRate);
+        $subject->setAnnualRate($annualRate);
 
         $result = $subject->convertAnnualRateToThreeDaysRate();
 

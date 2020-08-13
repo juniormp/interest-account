@@ -47,7 +47,7 @@ class Account
     {
         $interestRate = $this->interestRate;
 
-        return $interestRate->getRate();
+        return $interestRate->getAnnualRate();
     }
 
     public function getInterestRateEntity(): InterestRate
@@ -58,7 +58,7 @@ class Account
     public function applyInterestRate(float $rate): Account
     {
         $interestRate = new InterestRate();
-        $interestRate->setRate($rate);
+        $interestRate->setAnnualRate($rate);
 
         return $this->setInterestRate($interestRate);
     }

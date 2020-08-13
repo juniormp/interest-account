@@ -68,6 +68,6 @@ class UserFactoryTest extends TestCase
     {
         $interestRate = new InterestRate();
 
-        return $interestRate->setRate(0.5);
+        return $interestRate->setAnnualRate(0.5);
     }
 }
