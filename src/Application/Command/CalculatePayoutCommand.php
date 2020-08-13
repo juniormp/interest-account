@@ -3,7 +3,7 @@
 
 namespace Chip\InterestAccount\Application\Command;
 
-use Chip\InterestAccount\Application\Command\Validation\OpenAccountCommandValidation;
+use Chip\InterestAccount\Application\Command\Validation\CalculatePayoutCommandValidation;
 
 class CalculatePayoutCommand
 {
@@ -11,7 +11,7 @@ class CalculatePayoutCommand
 
     public function __construct(string $id)
     {
-        OpenAccountCommandValidation::validate($id);
+        CalculatePayoutCommandValidation::validate($id);
         $this->id = $id;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Chip\InterestAccount\Application\Command;
 
+use Chip\InterestAccount\Application\Command\Validation\ListTransactionsCommandValidation;
 use Chip\InterestAccount\Application\Command\Validation\OpenAccountCommandValidation;
 
 class ListTransactionsCommand
@@ -10,7 +11,7 @@ class ListTransactionsCommand
 
     public function __construct(string $id)
     {
-        OpenAccountCommandValidation::validate($id);
+        ListTransactionsCommandValidation::validate($id);
         $this->id = $id;
     }
 
