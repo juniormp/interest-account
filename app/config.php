@@ -7,6 +7,7 @@ use Chip\InterestAccount\Application\OpenAccount;
 use Chip\InterestAccount\Domain\InterestRate\ApplyInterestRateService;
 use Chip\InterestAccount\Domain\InterestRate\InterestRatePolicyBuilder;
 use Chip\InterestAccount\Domain\Money\MoneyFactory;
+use Chip\InterestAccount\Domain\Payout\DepositPayoutService;
 use Chip\InterestAccount\Domain\Payout\InterestRatePayoutService;
 use Chip\InterestAccount\Domain\Payout\PayoutFactory;
 use Chip\InterestAccount\Domain\User\UserFactory;
@@ -49,10 +50,13 @@ return [
             new InterestRatePayoutService(
                 new PayoutProvider(),
                 new PayoutFactory(),
-                new MoneyFactory()
             ),
             UserProvider::getInstance(),
-            new PayoutProvider()
+            new PayoutProvider(),
+            new DepositPayoutService(
+                new PayoutProvider(),
+                new PayoutFactory(),
+            )
         );
     }
 ];
