@@ -25,7 +25,6 @@ class DepositPayoutService
 
     public function execute(Account $account, Money $amount): void
     {
-        var_dump($amount->getValue());
         switch ($amount->getValue()) {
             case ($amount->getValue() >= DepositPayoutService::ONE_PENNY):
                 $account->deposit($amount);

@@ -2,19 +2,28 @@
 
 use Chip\InterestAccount\Application\Command\ListTransactionsCommand;
 use Chip\InterestAccount\Application\ListTransactions;
-use Chip\InterestAccount\Domain\Account\Account;
-use Chip\InterestAccount\Domain\Money\CurrencyType;
-use Chip\InterestAccount\Domain\Money\MoneyFactory;
-use Chip\InterestAccount\Domain\User\User;
 use Chip\InterestAccount\Domain\User\UUID;
-use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
+use Chip\InterestAccount\Tests\Support\AccountSupportFactory;
+use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
+use Chip\InterestAccount\Tests\Support\Repository\UserSupportRepository;
+use Chip\InterestAccount\Tests\Support\UserSupportFactory;
 use PHPUnit\Framework\TestCase;
 
 class ListTransactionsFeatureTest extends TestCase
 {
+
+    private $container;
+    private $subject;
+
+    protected function setUp(): void
+    {
+        $this->container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
+        $this->subject = $this->container->get(ListTransactions::class);
+    }
+
     protected function tearDown(): void
     {
-        UserProvider::getInstance()->destroy();
+        UserSupportRepository::cleanUserData();
     }
 
     /**
@@ -26,22 +35,24 @@ class ListTransactionsFeatureTest extends TestCase
     public function test_should_list_all_transactions_from_a_user_account()
     {
         $id = UUID::v4();
-        $user = new User();
-        $account = new Account();
-        $moneyFactory = new MoneyFactory();
-        $amount = 500.00;
-        $money = $moneyFactory->create($amount, CurrencyType::GBP);
-        $account->deposit($money);
-        $user->setAccount($account);
-        $user->setId($id);
+        $account = AccountSupportFactory::getInstance()::build();
+        $user = UserSupportFactory::getInstance()::withId($id)::withAccount($account)::build();
+        UserSupportRepository::persistUser($user);
 
-        UserProvider::getInstance()->save($user);
+        $amount1 = MoneySupportFactory::getInstance()::withAmount(500.00)::build();
+        $account->deposit($amount1);
 
-        $container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
-        $service = $container->get(ListTransactions::class);
+        $amount2 = MoneySupportFactory::getInstance()::withAmount(1000.00)::build();
+        $account->deposit($amount2);
 
-        $transactions = $service->execute(new ListTransactionsCommand($id));
+        $amount3 = MoneySupportFactory::getInstance()::withAmount(2000.00)::build();
+        $account->deposit($amount3);
 
-        $this->assertEquals($amount, $transactions[0]->getAmount());
+        $transactions = $this->subject->execute(new ListTransactionsCommand($id));
+
+        $this->assertCount(3, $transactions);
+        $this->assertEquals($amount1, $transactions[0]->getCurrency());
+        $this->assertEquals($amount2, $transactions[1]->getCurrency());
+        $this->assertEquals($amount3, $transactions[2]->getCurrency());
     }
 }
