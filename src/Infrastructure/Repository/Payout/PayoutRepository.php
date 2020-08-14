@@ -8,4 +8,6 @@ use Chip\InterestAccount\Domain\Payout\Payout;
 interface PayoutRepository
 {
     public static function save(Payout $payout): Payout;
+
+    public static function getAllPayoutsByUserId(string $id): array;
 }
