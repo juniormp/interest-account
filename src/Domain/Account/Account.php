@@ -7,6 +7,7 @@ use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\Transaction\Transaction;
 
 /**
+ * @property string $referenceId
  * @property string $status
  * @property Money $balance
  * @property InterestRate $interestRate

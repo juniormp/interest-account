@@ -4,6 +4,10 @@ namespace Chip\InterestAccount\Domain\Transaction;
 
 use Chip\InterestAccount\Domain\Money\Money;
 
+/**
+ * @covers string $date
+ * @covers Money $amount
+ */
 class Transaction
 {
     private $date;
