@@ -14,7 +14,8 @@
     "php-di/php-di": "^6.2",
     "guzzlehttp/guzzle": "^7.0",
     "hutnikau/job-scheduler": "^0.6.1",
-    "ext-json": "*"
+    "ext-json": "*",
+    "lavary/crunz": "^2.2"
   },
   "scripts": {
     "lint" : "./vendor/bin/php-cs-fixer fix src/",
