@@ -76,7 +76,7 @@ class CalculatePayoutFeatureTest extends TestCase
         $this->assertCount(1, $transactions);
         $this->assertEquals(200, $transactions[0]->getAmount());
 
-        $payouts = PayoutProvider::getAll();
+        $payouts = PayoutSupportRepository::getAllPayouts();
         $this->assertCount(1, $payouts);
         $this->assertEquals(0.016914600305284466, $payouts[0]->getAmount());
     }

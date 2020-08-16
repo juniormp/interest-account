@@ -30,7 +30,7 @@ class CalculatePayout
         $this->depositPayoutService = $depositPayoutService;
     }
 
-    public function execute(CalculatePayoutCommand $calculatePayoutCommand)
+    public function execute(CalculatePayoutCommand $calculatePayoutCommand): void
     {
         $user = $this->userRepository->findById($calculatePayoutCommand->getId());
         $interestRate = $user->getInterestRateEntity();
