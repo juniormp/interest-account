@@ -9,4 +9,6 @@ interface UserRepository
     public function save(User $user): User;
 
     public function findById(string $id): User;
+
+    public function findAllIds(): array;
 }

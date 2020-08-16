@@ -100,4 +100,26 @@ class UserProviderTest extends TestCase
 
         $this->subject->findById($id);
     }
+
+    public function test_should_return_all_users_id()
+    {
+        $id1 = UUID::v4();
+        $user = UserSupportFactory::getInstance()::withId($id1)::build();
+        UserProvider::getInstance()->save($user);
+
+        $id2 = UUID::v4();
+        $user = UserSupportFactory::getInstance()::withId($id2)::build();
+        UserProvider::getInstance()->save($user);
+
+        $id3 = UUID::v4();
+        $user = UserSupportFactory::getInstance()::withId($id3)::build();
+        UserProvider::getInstance()->save($user);
+
+        $result = $this->subject->findAllIds();
+
+        $this->assertCount(3, $result);
+        $this->assertEquals($id1, $result[0]);
+        $this->assertEquals($id2, $result[1]);
+        $this->assertEquals($id3, $result[2]);
+    }
 }

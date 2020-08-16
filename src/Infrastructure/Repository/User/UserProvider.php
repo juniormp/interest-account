@@ -65,4 +65,16 @@ class UserProvider extends SPLObjectStorage implements UserRepository
             throw new UserNotFoundException(UserNotFoundException::MESSAGE);
         }
     }
+
+    public function findAllIds(): array
+    {
+        $ids = [] ;
+        while (self::valid()) {
+            $user = self::getInstance()->current();
+            array_push($ids, $user->getId());
+            self::next();
+        }
+
+        return $ids;
+    }
 }
