@@ -7,6 +7,7 @@ use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserNotFoundEx
 use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
 use Chip\InterestAccount\Tests\Support\AccountSupportFactory;
 use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
+use Chip\InterestAccount\Tests\Support\Repository\UserSupportRepository;
 use Chip\InterestAccount\Tests\Support\UserSupportFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -16,22 +17,17 @@ class UserProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->subject = UserProvider::getInstance();
+        $this->subject = new UserProvider();
     }
 
     protected function tearDown(): void
     {
-        $this->subject->destroy();
+        UserSupportRepository::cleanUserData();
     }
 
-    public function test_should_return_the_same_provider_instance()
-    {
-        $firstUserProvider = UserProvider::getInstance();
-        $secondUserProvider = UserProvider::getInstance();
-
-        $this->assertSame($firstUserProvider, $secondUserProvider);
-    }
-
+    /**
+     * @covers ::save
+     */
     public function test_should_save_user()
     {
         $id = UUID::v4();
@@ -41,13 +37,13 @@ class UserProviderTest extends TestCase
 
         $this->subject->save($user);
 
-        $this->assertEquals(1, $this->subject->count());
-        $savedUser = $this->subject->offsetGet($user);
-        $this->assertSame($account, $savedUser->getAccount());
-        $this->assertSame($income, $savedUser->getIncome());
-        $this->assertSame($id, $savedUser->getId());
+        $userSaved = UserSupportRepository::getUserById($id);
+        $this->assertEquals($user, $userSaved);
     }
 
+    /**
+     * @covers ::save
+     */
     public function test_should_return_updated_user_after_saving()
     {
         $id = UUID::v4();
@@ -63,24 +59,16 @@ class UserProviderTest extends TestCase
         $this->assertSame($id, $user->getId());
     }
 
-    public function test_should_find_user_by_id()
-    {
-        $id = UUID::v4();
-        $user = UserSupportFactory::getInstance()::withId($id)::build();
-        $this->subject->save($user);
-
-        $result = $this->subject->findById($id);
-
-        $this->assertSame($id, $result->getId());
-    }
-
+    /**
+     * @covers ::save
+     */
     public function test_should_throw_exception_when_saving_if_user_has_already_an_account()
     {
         $id = UUID::v4();
         $income = MoneySupportFactory::getInstance()::build();
         $account = AccountSupportFactory::getInstance()::build();
         $user = UserSupportFactory::getInstance()::withId($id)::withAccount($account)::withIncome($income)::build();
-        UserProvider::getInstance()->save($user);
+        UserSupportRepository::persistUser($user);
 
         $user = new User();
         $user->setId($id)->setAccount($account)->setIncome($income);
@@ -91,6 +79,23 @@ class UserProviderTest extends TestCase
         $this->subject->save($user);
     }
 
+    /**
+     * @covers ::findById
+     */
+    public function test_should_find_user_by_id()
+    {
+        $id = UUID::v4();
+        $user = UserSupportFactory::getInstance()::withId($id)::build();
+        UserSupportRepository::persistUser($user);
+
+        $result = $this->subject->findById($id);
+
+        $this->assertSame($id, $result->getId());
+    }
+
+    /**
+     * @covers ::findById
+     */
     public function test_should_throw_exception_when_finding_if_user_do_not_exist()
     {
         $id = UUID::v4();
@@ -101,19 +106,22 @@ class UserProviderTest extends TestCase
         $this->subject->findById($id);
     }
 
+    /**
+     * @covers ::findAllIds
+     */
     public function test_should_return_all_users_id()
     {
         $id1 = UUID::v4();
         $user = UserSupportFactory::getInstance()::withId($id1)::build();
-        UserProvider::getInstance()->save($user);
+        UserSupportRepository::persistUser($user);
 
         $id2 = UUID::v4();
         $user = UserSupportFactory::getInstance()::withId($id2)::build();
-        UserProvider::getInstance()->save($user);
+        UserSupportRepository::persistUser($user);
 
         $id3 = UUID::v4();
         $user = UserSupportFactory::getInstance()::withId($id3)::build();
-        UserProvider::getInstance()->save($user);
+        UserSupportRepository::persistUser($user);
 
         $result = $this->subject->findAllIds();
 

@@ -7,18 +7,22 @@ use Chip\InterestAccount\Infrastructure\Repository\User\UserProvider;
 
 class UserSupportRepository
 {
+    private static $userProvider;
+
     public static function cleanUserData(): void
     {
-        UserProvider::getInstance()->destroy();
+        file_put_contents("user_repo.txt", "");
     }
 
     public static function persistUser(User $user): void
     {
-        UserProvider::getInstance()->save($user);
+        self::$userProvider = new UserProvider();
+        self::$userProvider->save($user);
     }
 
     public static function getUserById(string $id): User
     {
-        return UserProvider::getInstance()->findById($id);
+        self::$userProvider = new UserProvider();
+        return self::$userProvider->findById($id);
     }
 }

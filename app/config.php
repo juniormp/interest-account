@@ -25,7 +25,7 @@ return [
         return new OpenAccount(
             new ApplyInterestRateService(new InterestRatePolicyBuilder()),
             new UserFactory(),
-            UserProvider::getInstance(),
+            new UserProvider(),
             new UserIncomeService(new StatsAPIClient(new HttpClient([
                 'base_uri' => 'https://virtserver.swaggerhub.com/juniormp/StatsAPI/1.0.0/',
                 'defaults' => [
@@ -37,13 +37,13 @@ return [
 
     DepositFunds::class => function () {
         return new DepositFunds(
-            UserProvider::getInstance()
+            new UserProvider()
         );
     },
 
     ListTransactions::class => function () {
         return new ListTransactions(
-            UserProvider::getInstance()
+            new UserProvider()
         );
     },
 
@@ -53,7 +53,7 @@ return [
                 new PayoutProvider(),
                 new PayoutFactory()
             ),
-            UserProvider::getInstance(),
+            new UserProvider(),
             new PayoutProvider(),
             new DepositPayoutService(
                 new PayoutProvider(),
@@ -64,13 +64,13 @@ return [
 
     ClosePayouts::class => function () {
         return new ClosePayouts(
-            UserProvider::getInstance(),
+            new UserProvider(),
             new CalculatePayout(
                 new InterestRatePayoutService(
                     new PayoutProvider(),
                     new PayoutFactory()
                 ),
-                UserProvider::getInstance(),
+                new UserProvider(),
                 new PayoutProvider(),
                 new DepositPayoutService(
                     new PayoutProvider(),
@@ -84,13 +84,13 @@ return [
         return new PayoutScheduler(
             new Schedule(),
             new ClosePayouts(
-                UserProvider::getInstance(),
+                new UserProvider(),
                 new CalculatePayout(
                     new InterestRatePayoutService(
                         new PayoutProvider(),
                         new PayoutFactory()
                     ),
-                    UserProvider::getInstance(),
+                    new UserProvider(),
                     new PayoutProvider(),
                     new DepositPayoutService(
                         new PayoutProvider(),
