@@ -44,7 +44,7 @@ class UserProviderTest extends TestCase
     /**
      * @covers ::save
      */
-    public function test_should_return_updated_user_after_saving()
+    public function test_should_return_saved_user_after_saving()
     {
         $id = UUID::v4();
         $income = MoneySupportFactory::getInstance()::build();
@@ -77,6 +77,60 @@ class UserProviderTest extends TestCase
         $this->expectExceptionMessage(UserAlreadyHasAccount::MESSAGE);
 
         $this->subject->save($user);
+    }
+
+    /**
+     * @covers ::update
+     */
+    public function test_should_update_user()
+    {
+        $id = UUID::v4();
+        $user = UserSupportFactory::getInstance()::withId($id)::build();
+        UserSupportRepository::persistUser($user);
+        $account = AccountSupportFactory::getInstance()::build();
+
+        $userPersisted = UserSupportRepository::getUserById($user->getId());
+        $userPersisted->setAccount($account);
+        $this->subject->update($userPersisted);
+
+        $userUpdated = UserSupportRepository::getUserById($userPersisted->getId());
+        $this->assertEquals($userPersisted, $userUpdated);
+    }
+
+    /**
+     * @covers ::update
+     */
+    public function test_should_return_updated_user_after_saving()
+    {
+        $id = UUID::v4();
+        $user = UserSupportFactory::getInstance()::withId($id)::build();
+        UserSupportRepository::persistUser($user);
+        $account = AccountSupportFactory::getInstance()::build();
+
+        $userPersisted = UserSupportRepository::getUserById($user->getId());
+        $userPersisted->setAccount($account);
+        $result = $this->subject->update($userPersisted);
+
+        $this->assertEquals(1, $this->subject->count());
+        $this->assertSame($account, $result->getAccount());
+        $this->assertSame($id, $user->getId());
+    }
+
+    /**
+     * @covers ::save
+     */
+    public function test_should_throw_exception_when_updating_if_user_do_not_exist()
+    {
+        $id = UUID::v4();
+        $user = UserSupportFactory::getInstance()::withId($id)::build();
+        UserSupportRepository::persistUser($user);
+
+        $userNotPersisted = UserSupportFactory::getInstance()::withId("fake-id")::build();
+
+        $this->expectException(UserNotFoundException::class);
+        $this->expectExceptionMessage(UserNotFoundException::MESSAGE);
+
+        $this->subject->update($userNotPersisted);
     }
 
     /**

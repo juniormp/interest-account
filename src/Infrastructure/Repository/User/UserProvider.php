@@ -29,6 +29,16 @@ class UserProvider extends SPLObjectStorage implements UserRepository
         }
     }
 
+    public function update(User $user): User
+    {
+        if ($this->findById($user->getId())) {
+            $this->attach($user, $user);
+            $this->saveOnFile($this);
+        }
+
+        return $user;
+    }
+
     public function findById(string $id): User
     {
         $r = $this->readFromFile();
