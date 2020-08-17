@@ -51,6 +51,7 @@ class DepositFundsFeatureTest extends TestCase
 
         $user = UserSupportRepository::getUserById($id);
         $transactions = $user->getTransactions();
+
         $this->assertCount(2, $transactions);
         $this->assertEquals($money, $transactions[0]->getCurrency());
         $this->assertEquals($money2, $transactions[1]->getCurrency());

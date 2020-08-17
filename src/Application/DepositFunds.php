@@ -26,6 +26,10 @@ class DepositFunds
         $moneyFactory = new MoneyFactory();
         $amount = $moneyFactory->create($depositFundsCommand->getAmount(), CurrencyType::GBP);
 
-        return $account->deposit($amount);
+        $transaction = $account->deposit($amount);
+
+        $this->userRepository->update($user);
+
+        return $transaction;
     }
 }
