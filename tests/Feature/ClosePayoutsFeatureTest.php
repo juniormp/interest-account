@@ -27,7 +27,7 @@ class ClosePayoutsFeatureTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->container = require '/Users/mauricio.junior/workspace/interest-account/app/bootstrap.php';
+        $this->container = require './app/bootstrap.php';
         $this->subject = $this->container->get(ClosePayouts::class);
     }
 
