@@ -3,14 +3,13 @@
 namespace Chip\InterestAccount\Infrastructure\Repository\User;
 
 use Chip\InterestAccount\Domain\User\User;
-use Chip\InterestAccount\Infrastructure\Repository\User\Exception\Repo;
 use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserAlreadyHasAccount;
 use Chip\InterestAccount\Infrastructure\Repository\User\Exception\UserNotFoundException;
 use SplObjectStorage;
 
 class UserProvider extends SPLObjectStorage implements UserRepository
 {
-    use Repo;
+    use Repository;
 
     public function getHash($user)
     {

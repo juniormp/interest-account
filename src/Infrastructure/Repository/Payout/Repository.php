@@ -3,7 +3,7 @@
 
 namespace Chip\InterestAccount\Infrastructure\Repository\Payout;
 
-trait Repo
+trait Repository
 {
     private function saveOnfile(array $payout)
     {

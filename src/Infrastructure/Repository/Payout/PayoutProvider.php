@@ -9,7 +9,7 @@ use Chip\InterestAccount\Domain\Payout\Payout;
  */
 class PayoutProvider implements PayoutRepository
 {
-    use Repo;
+    use Repository;
 
     private $payouts = [];
 

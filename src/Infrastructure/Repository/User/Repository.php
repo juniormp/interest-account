@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Chip\InterestAccount\Infrastructure\Repository\User\Exception;
+namespace Chip\InterestAccount\Infrastructure\Repository\User;
 
 use SplObjectStorage;
 
-trait Repo
+trait Repository
 {
     private function saveOnFile(SPLObjectStorage $user)
     {
