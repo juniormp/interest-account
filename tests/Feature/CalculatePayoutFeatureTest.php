@@ -4,7 +4,6 @@ use Chip\InterestAccount\Application\CalculatePayout;
 use Chip\InterestAccount\Application\Command\CalculatePayoutCommand;
 use Chip\InterestAccount\Domain\Money\Money;
 use Chip\InterestAccount\Domain\User\UUID;
-use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
 use Chip\InterestAccount\Tests\Support\AccountSupportFactory;
 use Chip\InterestAccount\Tests\Support\InterestRateSupportFactory;
 use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
@@ -49,7 +48,7 @@ class CalculatePayoutFeatureTest extends TestCase
 
         $this->subject->execute(new CalculatePayoutCommand($user->getId()));
 
-        $transactions = $user->getTransactions();
+        $transactions = UserSupportRepository::getUserById($user->getId())->getTransactions();
         $this->assertCount(2, $transactions);
         $this->assertEquals(50000.0, $transactions[0]->getAmount());
         $this->assertEquals(4.2286500763221, $transactions[1]->getAmount());
@@ -72,7 +71,7 @@ class CalculatePayoutFeatureTest extends TestCase
 
         $this->subject->execute(new CalculatePayoutCommand($user->getId()));
 
-        $transactions = $user->getTransactions();
+        $transactions = UserSupportRepository::getUserById($user->getId())->getTransactions();
         $this->assertCount(1, $transactions);
         $this->assertEquals(200, $transactions[0]->getAmount());
 
@@ -102,7 +101,7 @@ class CalculatePayoutFeatureTest extends TestCase
         PayoutSupportRepository::persistPayout($payout);
 
         // Assert that there is only one transaction on user account
-        $transactions = $user->getTransactions();
+        $transactions = UserSupportRepository::getUserById($user->getId())->getTransactions();
         $this->assertCount(1, $transactions);
         $this->assertEquals(5000, $transactions[0]->getAmount());
 
@@ -114,7 +113,7 @@ class CalculatePayoutFeatureTest extends TestCase
         $this->subject->execute(new CalculatePayoutCommand($user->getId()));
 
         // Now there are two transactions, one is the initial deposit and the second is the pending payout
-        $transactions = $user->getTransactions();
+        $transactions = UserSupportRepository::getUserById($user->getId())->getTransactions();
         $this->assertCount(2, $transactions);
         $this->assertEquals(5000, $transactions[0]->getAmount());
         $this->assertEquals(1.412865007632, $transactions[1]->getAmount());

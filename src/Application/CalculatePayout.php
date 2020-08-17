@@ -46,6 +46,6 @@ class CalculatePayout
 
         $this->payoutRepository::removePayoutByUserId($user->getId());
 
-        $this->depositPayoutService->execute($account, $totalAmount);
+        $this->depositPayoutService->execute($user, $totalAmount);
     }
 }
