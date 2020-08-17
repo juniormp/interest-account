@@ -57,7 +57,8 @@ return [
             new PayoutProvider(),
             new DepositPayoutService(
                 new PayoutProvider(),
-                new PayoutFactory()
+                new PayoutFactory(),
+                new UserProvider()
             )
         );
     },
@@ -74,7 +75,8 @@ return [
                 new PayoutProvider(),
                 new DepositPayoutService(
                     new PayoutProvider(),
-                    new PayoutFactory()
+                    new PayoutFactory(),
+                    new UserProvider()
                 )
             )
         );
@@ -94,7 +96,8 @@ return [
                     new PayoutProvider(),
                     new DepositPayoutService(
                         new PayoutProvider(),
-                        new PayoutFactory()
+                        new PayoutFactory(),
+                        new UserProvider()
                     )
                 )
             )

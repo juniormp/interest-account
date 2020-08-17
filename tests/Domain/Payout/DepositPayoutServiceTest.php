@@ -6,7 +6,9 @@ use Chip\InterestAccount\Domain\Payout\DepositPayoutService;
 use Chip\InterestAccount\Domain\Payout\Exception\NegativeAmountException;
 use Chip\InterestAccount\Domain\Payout\Payout;
 use Chip\InterestAccount\Domain\Payout\PayoutFactory;
+use Chip\InterestAccount\Domain\User\User;
 use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
+use Chip\InterestAccount\Infrastructure\Repository\User\UserRepository;
 use Chip\InterestAccount\Tests\Support\MoneySupportFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -22,13 +24,17 @@ class DepositPayoutServiceTest extends TestCase
     {
         $payoutProvider = $this->createMock(PayoutProvider::class);
         $payoutFactory = $this->createMock(PayoutFactory::class);
-        $subject = new DepositPayoutService($payoutProvider, $payoutFactory);
+        $userRepository = Mockery::spy(UserRepository::class);
+        $subject = new DepositPayoutService($payoutProvider, $payoutFactory, $userRepository);
+        $user = $this->createMock(User::class);
         $account = Mockery::spy(Account::class);
+        $user->method('getAccount')->willReturn($account);
         $amount = MoneySupportFactory::getInstance()::withAmount(1.0)::build();
 
-        $subject->execute($account, $amount);
+        $subject->execute($user, $amount);
 
         $account->shouldHaveReceived('deposit')->with($amount)->once();
+        $userRepository->shouldHaveReceived('update')->with($user)->once();
     }
 
     /**
@@ -38,13 +44,17 @@ class DepositPayoutServiceTest extends TestCase
     {
         $payoutProvider = $this->createMock(PayoutProvider::class);
         $payoutFactory = $this->createMock(PayoutFactory::class);
-        $subject = new DepositPayoutService($payoutProvider, $payoutFactory);
+        $userRepository = Mockery::spy(UserRepository::class);
+        $subject = new DepositPayoutService($payoutProvider, $payoutFactory, $userRepository);
+        $user = $this->createMock(User::class);
         $account = Mockery::spy(Account::class);
+        $user->method('getAccount')->willReturn($account);
         $amount = MoneySupportFactory::getInstance()::withAmount(1.1)::build();
 
-        $subject->execute($account, $amount);
+        $subject->execute($user, $amount);
 
         $account->shouldHaveReceived('deposit')->with($amount)->once();
+        $userRepository->shouldHaveReceived('update')->with($user)->once();
     }
 
     /**
@@ -54,14 +64,17 @@ class DepositPayoutServiceTest extends TestCase
     {
         $payoutProvider = Mockery::spy(PayoutProvider::class);
         $payoutFactory = $this->createMock(PayoutFactory::class);
-        $subject = new DepositPayoutService($payoutProvider, $payoutFactory);
+        $userRepository = $this->createMock(UserRepository::class);
+        $subject = new DepositPayoutService($payoutProvider, $payoutFactory, $userRepository);
         $account = $this->createMock(Account::class);
         $payout = $this->createMock(Payout::class);
         $amount = MoneySupportFactory::getInstance()::withAmount(0.99)::build();
+        $user = $this->createMock(User::class);
+        $user->method('getAccount')->willReturn($account);
         $account->method('getReferenceId')->willReturn('fake-id');
         $payoutFactory->method('create')->with('fake-id', $amount)->willReturn($payout);
 
-        $subject->execute($account, $amount);
+        $subject->execute($user, $amount);
 
         $payoutProvider->shouldHaveReceived('save')->with($payout)->once();
     }
@@ -73,11 +86,14 @@ class DepositPayoutServiceTest extends TestCase
     {
         $payoutProvider = Mockery::spy(PayoutProvider::class);
         $payoutFactory = Mockery::spy(PayoutFactory::class);
-        $subject = new DepositPayoutService($payoutProvider, $payoutFactory);
+        $userRepository = $this->createMock(UserRepository::class);
+        $subject = new DepositPayoutService($payoutProvider, $payoutFactory, $userRepository);
+        $user = $this->createMock(User::class);
         $account = Mockery::spy(Account::class);
+        $user->method('getAccount')->willReturn($account);
         $amount = MoneySupportFactory::getInstance()::withAmount(0)::build();
 
-        $subject->execute($account, $amount);
+        $subject->execute($user, $amount);
 
         $payoutFactory->shouldNotHaveReceived('create');
         $payoutProvider->shouldNotHaveReceived('save');
@@ -90,13 +106,17 @@ class DepositPayoutServiceTest extends TestCase
     {
         $payoutProvider = Mockery::spy(PayoutProvider::class);
         $payoutFactory = $this->createMock(PayoutFactory::class);
-        $subject = new DepositPayoutService($payoutProvider, $payoutFactory);
+        $userRepository = $this->createMock(UserRepository::class);
+        $user = $this->createMock(User::class);
+        $subject = new DepositPayoutService($payoutProvider, $payoutFactory, $userRepository);
         $account = Mockery::spy(Account::class);
+        $user->method('getAccount')->willReturn($account);
+
         $amount = MoneySupportFactory::getInstance()::withAmount(-0.1)::build();
 
         $this->expectException(NegativeAmountException::class);
         $this->expectExceptionMessage("AMOUNT CAN NOT BE NEGATIVE");
 
-        $subject->execute($account, $amount);
+        $subject->execute($user, $amount);
     }
 }
