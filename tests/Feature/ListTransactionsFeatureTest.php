@@ -37,7 +37,6 @@ class ListTransactionsFeatureTest extends TestCase
         $id = UUID::v4();
         $account = AccountSupportFactory::getInstance()::build();
         $user = UserSupportFactory::getInstance()::withId($id)::withAccount($account)::build();
-        UserSupportRepository::persistUser($user);
 
         $amount1 = MoneySupportFactory::getInstance()::withAmount(500.00)::build();
         $account->deposit($amount1);
@@ -47,6 +46,8 @@ class ListTransactionsFeatureTest extends TestCase
 
         $amount3 = MoneySupportFactory::getInstance()::withAmount(2000.00)::build();
         $account->deposit($amount3);
+
+        UserSupportRepository::persistUser($user);
 
         $transactions = $this->subject->execute(new ListTransactionsCommand($id));
 
