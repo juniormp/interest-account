@@ -3,69 +3,49 @@
 namespace Chip\InterestAccount\Infrastructure\Repository\Payout;
 
 use Chip\InterestAccount\Domain\Payout\Payout;
-use Exception;
 
 /**
  * @property array $payouts
  */
 class PayoutProvider implements PayoutRepository
 {
-    private static $instances = [];
-    private static $payouts = [];
+    use Repo;
 
-    protected function __clone()
+    private $payouts = [];
+
+    public function save(Payout $payout): Payout
     {
-    }
-
-    public function destroy()
-    {
-        self::$instances = null;
-    }
-
-    public function __wakeup()
-    {
-        throw new Exception("Cannot unserialize a singleton.");
-    }
-
-    public static function getInstance(): PayoutProvider
-    {
-        $cls = static::class;
-
-        if (!isset(self::$instances[$cls])) {
-            self::$instances[$cls] = new static;
-        }
-
-        return self::$instances[$cls];
-    }
-
-    public static function save(Payout $payout): Payout
-    {
-        array_push(self::$payouts, $payout);
+        $this->getAll();
+        array_push($this->payouts, $payout);
+        $this->saveOnfile($this->payouts);
 
         return $payout;
     }
 
-    public static function getAll(): array
+    public function getAll(): array
     {
-        return self::$payouts;
+        $r = $this->readFromFile();
+
+        if ($r !== false) {
+            $this->payouts = $r;
+        }
+
+        return $this->payouts;
     }
 
-    public static function getAllPayoutsByUserId(string $id): array
+    public function getAllPayoutsByUserId(string $id): array
     {
-        return array_filter(self::$payouts, function ($payout) use ($id) {
+        $payouts = $this->getAll();
+
+        return array_filter($payouts, function ($payout) use ($id) {
             return $payout->getReferenceId() === $id;
         });
     }
 
-    public static function removePayoutByUserId(string $id)
+    public function removePayoutByUserId(string $id)
     {
-        $payouts = self::getAllPayoutsByUserId($id);
-
-        self::$payouts = array_values(array_diff_key(self::$payouts, $payouts));
-    }
-
-    public function cleanPayouts()
-    {
-        self::$payouts = [];
+        $payouts = $this->getAllPayoutsByUserId($id);
+        $this->payouts = array_values(array_diff_key($this->payouts, $payouts));
+        $this->saveOnfile($this->payouts);
     }
 }

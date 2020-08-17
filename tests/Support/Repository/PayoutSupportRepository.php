@@ -7,19 +7,22 @@ use Chip\InterestAccount\Infrastructure\Repository\Payout\PayoutProvider;
 
 class PayoutSupportRepository
 {
+    private static $payoutProvider;
+
     public static function cleanPayoutData(): void
     {
-        PayoutProvider::getInstance()->destroy();
-        PayoutProvider::getInstance()->cleanPayouts();
+        file_put_contents("payout_repo.txt", "");
     }
 
     public static function persistPayout(Payout $payout): void
     {
-        PayoutProvider::getInstance()::save($payout);
+        self::$payoutProvider = new PayoutProvider();
+        self::$payoutProvider->save($payout);
     }
 
-    public static function getAllPayouts(): array
+    public static function getAll(): array
     {
-        return PayoutProvider::getAll();
+        self::$payoutProvider = new PayoutProvider();
+        return self::$payoutProvider->getAll();
     }
 }
