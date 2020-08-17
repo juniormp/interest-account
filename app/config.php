@@ -51,13 +51,13 @@ return [
         return new CalculatePayout(
             new InterestRatePayoutService(
                 new PayoutProvider(),
-                new PayoutFactory(),
+                new PayoutFactory()
             ),
             UserProvider::getInstance(),
             new PayoutProvider(),
             new DepositPayoutService(
                 new PayoutProvider(),
-                new PayoutFactory(),
+                new PayoutFactory()
             )
         );
     },
@@ -68,13 +68,13 @@ return [
             new CalculatePayout(
                 new InterestRatePayoutService(
                     new PayoutProvider(),
-                    new PayoutFactory(),
+                    new PayoutFactory()
                 ),
                 UserProvider::getInstance(),
                 new PayoutProvider(),
                 new DepositPayoutService(
                     new PayoutProvider(),
-                    new PayoutFactory(),
+                    new PayoutFactory()
                 )
             )
         );
@@ -88,13 +88,13 @@ return [
                 new CalculatePayout(
                     new InterestRatePayoutService(
                         new PayoutProvider(),
-                        new PayoutFactory(),
+                        new PayoutFactory()
                     ),
                     UserProvider::getInstance(),
                     new PayoutProvider(),
                     new DepositPayoutService(
                         new PayoutProvider(),
-                        new PayoutFactory(),
+                        new PayoutFactory()
                     )
                 )
             )
