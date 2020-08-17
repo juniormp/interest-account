@@ -30,7 +30,7 @@ class InterestRatePayoutService
 
     public function getPendingPayoutsAmount(string $referenceId): Money
     {
-        $payouts = $this->payoutRepository::getAllPayoutsByUserId($referenceId);
+        $payouts = $this->payoutRepository->getAllPayoutsByUserId($referenceId);
 
         $totalAmount = array_reduce($payouts, function ($result, $payout) {
             $result += $payout->getAmount();

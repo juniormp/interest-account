@@ -75,7 +75,7 @@ class CalculatePayoutFeatureTest extends TestCase
         $this->assertCount(1, $transactions);
         $this->assertEquals(200, $transactions[0]->getAmount());
 
-        $payouts = PayoutSupportRepository::getAllPayouts();
+        $payouts = PayoutSupportRepository::getAll();
         $this->assertCount(1, $payouts);
         $this->assertEquals(0.016914600305284466, $payouts[0]->getAmount());
     }
@@ -106,7 +106,7 @@ class CalculatePayoutFeatureTest extends TestCase
         $this->assertEquals(5000, $transactions[0]->getAmount());
 
         // Assert that there is only one payout related with user account that are pending to be deposit
-        $payouts = PayoutSupportRepository::getAllPayouts();
+        $payouts = PayoutSupportRepository::getAll();
         $this->assertCount(1, $payouts);
         $this->assertEquals(0.99, $payouts[0]->getAmount());
 
@@ -119,7 +119,7 @@ class CalculatePayoutFeatureTest extends TestCase
         $this->assertEquals(1.412865007632, $transactions[1]->getAmount());
 
         // Assert that there is non pending payout related with user account
-        $payouts = PayoutSupportRepository::getAllPayouts();
+        $payouts = PayoutSupportRepository::getAll();
         $this->assertCount(0, $payouts);
     }
 }

@@ -44,7 +44,7 @@ class CalculatePayout
             CurrencyType::GBP
         );
 
-        $this->payoutRepository::removePayoutByUserId($user->getId());
+        $this->payoutRepository->removePayoutByUserId($user->getId());
 
         $this->depositPayoutService->execute($user, $totalAmount);
     }
