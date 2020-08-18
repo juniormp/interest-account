@@ -26,7 +26,7 @@ class PayoutScheduler
         });
 
         $task
-            ->everyMinute()
+            ->everySeventyTwoHours()
             ->description(PayoutScheduler::DESCRIPTION);
 
         return $this->schedule;
