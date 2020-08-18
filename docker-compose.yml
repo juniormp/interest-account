@@ -1,10 +1,12 @@
-version: "3"
+version: "3.7"
 services:
   chip:
-    build: .
-    ports:
-      - "80:80"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: chip-library
+    container_name: chip-library
+    restart: unless-stopped
+    working_dir: /var/www/
     volumes:
-      - .:/var/www/html/
-    networks:
-      - default
+      - ./:/var/www
