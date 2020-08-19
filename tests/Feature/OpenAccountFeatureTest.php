@@ -40,15 +40,15 @@ class OpenAccountFeatureTest extends TestCase
         $id = UUID::v4();
         $income = 499999.0;
         $interestRate = 1.02;
-        $statusAccount = AccountStatus::ACTIVE;
+        $statusAccount = "ACTIVE";
 
         $user = $this->subject->execute(new OpenAccountCommand($id));
 
-        $this->assertEquals($id, $user->getId());
-        $this->assertEquals($income, $user->getIncome()->getValue());
-        $this->assertEquals($id, $user->getAccount()->getReferenceId());
-        $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
-        $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
+        $this->assertEquals($id, $user["user"]["id"]);
+        $this->assertEquals($income, $user["user"]["income"]["value"]);
+        $this->assertEquals($id, $user["user"]["account"]["referenceId"]);
+        $this->assertEquals($statusAccount, $user["user"]["account"]["status"]);
+        $this->assertEquals($interestRate, $user["user"]["account"]["interestRate"]["annualRate"]);
     }
 
     /**
@@ -100,11 +100,11 @@ class OpenAccountFeatureTest extends TestCase
 
         $user = $this->subject->execute(new OpenAccountCommand($id));
 
-        $this->assertEquals($id, $user->getId());
-        $this->assertEquals($income, $user->getIncome()->getValue());
-        $this->assertEquals($id, $user->getAccount()->getReferenceId());
-        $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
-        $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
+        $this->assertEquals($id, $user["user"]["id"]);
+        $this->assertEquals($income, $user["user"]["income"]["value"]);
+        $this->assertEquals($id, $user["user"]["account"]["referenceId"]);
+        $this->assertEquals($statusAccount, $user["user"]["account"]["status"]);
+        $this->assertEquals($interestRate, $user["user"]["account"]["interestRate"]["annualRate"]);
     }
 
     /**
@@ -122,11 +122,11 @@ class OpenAccountFeatureTest extends TestCase
 
         $user = $this->subject->execute(new OpenAccountCommand($id));
 
-        $this->assertEquals($id, $user->getId());
-        $this->assertEquals($income, $user->getIncome()->getValue());
-        $this->assertEquals($id, $user->getAccount()->getReferenceId());
-        $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
-        $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
+        $this->assertEquals($id, $user["user"]["id"]);
+        $this->assertEquals($income, $user["user"]["income"]["value"]);
+        $this->assertEquals($id, $user["user"]["account"]["referenceId"]);
+        $this->assertEquals($statusAccount, $user["user"]["account"]["status"]);
+        $this->assertEquals($interestRate, $user["user"]["account"]["interestRate"]["annualRate"]);
     }
 
     /**
@@ -144,11 +144,11 @@ class OpenAccountFeatureTest extends TestCase
 
         $user = $this->subject->execute(new OpenAccountCommand($id));
 
-        $this->assertEquals($id, $user->getId());
-        $this->assertEquals($income, $user->getIncome()->getValue());
-        $this->assertEquals($id, $user->getAccount()->getReferenceId());
-        $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
-        $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
+        $this->assertEquals($id, $user["user"]["id"]);
+        $this->assertEquals($income, $user["user"]["income"]["value"]);
+        $this->assertEquals($id, $user["user"]["account"]["referenceId"]);
+        $this->assertEquals($statusAccount, $user["user"]["account"]["status"]);
+        $this->assertEquals($interestRate, $user["user"]["account"]["interestRate"]["annualRate"]);
     }
 
     /**
@@ -166,9 +166,10 @@ class OpenAccountFeatureTest extends TestCase
 
         $user = $this->subject->execute(new OpenAccountCommand($id));
 
-        $this->assertEquals($id, $user->getId());
-        $this->assertEquals($income, $user->getIncome()->getValue());
-        $this->assertEquals($statusAccount, $user->getAccount()->getStatus());
-        $this->assertEquals($interestRate, $user->getAccount()->getInterestRate());
+        $this->assertEquals($id, $user["user"]["id"]);
+        $this->assertEquals($income, $user["user"]["income"]["value"]);
+        $this->assertEquals($id, $user["user"]["account"]["referenceId"]);
+        $this->assertEquals($statusAccount, $user["user"]["account"]["status"]);
+        $this->assertEquals($interestRate, $user["user"]["account"]["interestRate"]["annualRate"]);
     }
 }

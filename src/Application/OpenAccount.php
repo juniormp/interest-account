@@ -3,6 +3,7 @@
 namespace Chip\InterestAccount\Application;
 
 use Chip\InterestAccount\Application\Command\OpenAccountCommand;
+use Chip\InterestAccount\Application\Response\UserResponse;
 use Chip\InterestAccount\Domain\Account\Account;
 use Chip\InterestAccount\Domain\Account\AccountStatus;
 use Chip\InterestAccount\Domain\InterestRate\ApplyInterestRateService;
@@ -31,13 +32,14 @@ class OpenAccount
         $this->userIncomeService = $userIncomeService;
     }
 
-    public function execute(OpenAccountCommand $command): User
+    public function execute(OpenAccountCommand $command): array
     {
         $user = $this->createUser($command);
         $user = $this->setUserIncome($user);
         $user = $this->applyInterestRateService->apply($user);
+        $user = $this->userRepository->save($user);
 
-        return $this->userRepository->save($user);
+        return UserResponse::toJson($user);
     }
 
     private function createUser(OpenAccountCommand $command): User
