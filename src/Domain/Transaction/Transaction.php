@@ -30,4 +30,9 @@ class Transaction
 
         return $currency->getValue();
     }
+
+    public function getDate(): string
+    {
+        return $this->date;
+    }
 }

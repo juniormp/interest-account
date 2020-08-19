@@ -4,6 +4,7 @@
 namespace Chip\InterestAccount\Application;
 
 use Chip\InterestAccount\Application\Command\DepositFundsCommand;
+use Chip\InterestAccount\Application\Response\TransactionResponse;
 use Chip\InterestAccount\Domain\Money\CurrencyType;
 use Chip\InterestAccount\Domain\Money\MoneyFactory;
 use Chip\InterestAccount\Domain\Transaction\Transaction;
@@ -18,7 +19,7 @@ class DepositFunds
         $this->userRepository = $userRepository;
     }
 
-    public function execute(DepositFundsCommand $depositFundsCommand): Transaction
+    public function execute(DepositFundsCommand $depositFundsCommand): array
     {
         $user = $this->userRepository->findById($depositFundsCommand->getId());
         $account = $user->getAccount();
@@ -30,6 +31,6 @@ class DepositFunds
 
         $this->userRepository->update($user);
 
-        return $transaction;
+        return TransactionResponse::toJson($transaction);
     }
 }

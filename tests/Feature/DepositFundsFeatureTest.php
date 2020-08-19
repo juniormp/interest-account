@@ -42,12 +42,12 @@ class DepositFundsFeatureTest extends TestCase
         $amount = 500.00;
         $transaction = $this->subject->execute(new DepositFundsCommand($id, $amount));
         $money = MoneySupportFactory::getInstance()::withAmount($amount)::build();
-        $this->assertEquals($money, $transaction->getCurrency());
+        $this->assertEquals($money->getValue(), $transaction["amount"]["value"]);
 
         $amount2 = 250.00;
         $transaction2 = $this->subject->execute(new DepositFundsCommand($id, $amount2));
         $money2 = MoneySupportFactory::getInstance()::withAmount($amount2)::build();
-        $this->assertEquals($money2, $transaction2->getCurrency());
+        $this->assertEquals($money2->getValue(), $transaction2["amount"]["value"]);
 
         $user = UserSupportRepository::getUserById($id);
         $transactions = $user->getTransactions();

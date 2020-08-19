@@ -52,8 +52,8 @@ class ListTransactionsFeatureTest extends TestCase
         $transactions = $this->subject->execute(new ListTransactionsCommand($id));
 
         $this->assertCount(3, $transactions);
-        $this->assertEquals($amount1, $transactions[0]->getCurrency());
-        $this->assertEquals($amount2, $transactions[1]->getCurrency());
-        $this->assertEquals($amount3, $transactions[2]->getCurrency());
+        $this->assertEquals($amount1->getValue(), $transactions[0]["amount"]["value"]);
+        $this->assertEquals($amount2->getValue(), $transactions[1]["amount"]["value"]);
+        $this->assertEquals($amount3->getValue(), $transactions[2]["amount"]["value"]);
     }
 }

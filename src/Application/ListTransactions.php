@@ -4,6 +4,7 @@
 namespace Chip\InterestAccount\Application;
 
 use Chip\InterestAccount\Application\Command\ListTransactionsCommand;
+use Chip\InterestAccount\Application\Response\TransactionsResponse;
 use Chip\InterestAccount\Infrastructure\Repository\User\UserRepository;
 
 class ListTransactions
@@ -19,6 +20,6 @@ class ListTransactions
     {
         $user = $this->userRepository->findById($listTransactionsCommand->getId());
 
-        return $user->getTransactions();
+        return TransactionsResponse::toJson($user->getTransactions());
     }
 }
