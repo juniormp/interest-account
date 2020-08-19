@@ -26,9 +26,7 @@ class InterestRateResponseTest extends TestCase
     private function json(): array
     {
         return [
-            "interestRate" => [
-                "annualRate" => 1.02
-            ]
+            "annualRate" => 1.02
         ];
     }
 }

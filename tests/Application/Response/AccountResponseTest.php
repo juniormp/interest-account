@@ -38,16 +38,14 @@ class AccountResponseTest extends TestCase
     private function json(): array
     {
         return [
-            "account" => [
-                "referenceId" => "7693cb14-6f68-4be5-8a4a-9fc3740f6754",
-                "status" => "ACTIVE",
-                "balance" => [
-                    "value" => 0.0,
-                    "currencyType" => "GBP - British pound"
-                ],
-                "interestRate" => [
-                    "annualRate" => 1.02
-                ]
+            "referenceId" => "7693cb14-6f68-4be5-8a4a-9fc3740f6754",
+            "status" => "ACTIVE",
+            "balance" => [
+                "value" => 0.0,
+                "currencyType" => "GBP - British pound"
+            ],
+            "interestRate" => [
+                "annualRate" => 1.02
             ]
         ];
     }
